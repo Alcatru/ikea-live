@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0058a3">
+<title>Your IKEA journey · Live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body { background: var(--soft); min-height: 100svh; }
+  .app { max-width: 460px; margin: 0 auto; min-height: 100svh; background: var(--paper); display: flex; flex-direction: column; }
+  header { background: var(--blue); color: #fff; padding: 14px 16px 12px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 5; }
+  header .tag { background: var(--yellow); color: var(--ink); font: 800 12px var(--sans); letter-spacing: .04em; padding: 4px 8px; border-radius: 3px; }
+  header .ttl { font: 700 15px var(--sans); flex: 1; }
+  header .st { font: 600 11px var(--sans); opacity: .9; display: flex; align-items: center; gap: 6px; }
+  main { flex: 1; padding: 16px; }
+  .wait { text-align: center; padding: 60px 10px; color: var(--grey); }
+  /* profile card (IKEA Family style) */
+  .card { border: 2px solid var(--ink); border-radius: 10px; overflow: hidden; animation: pop .55s ease-out both; }
+  .card .top { background: var(--yellow); padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; }
+  .card .top b { font: 800 13px var(--sans); letter-spacing: .08em; text-transform: uppercase; }
+  .card .body { padding: 14px; display: flex; gap: 14px; align-items: center; }
+  .avatar { width: 62px; height: 62px; flex: none; border: 2px solid var(--ink); border-radius: 50%; display: grid; place-items: center; background: var(--paper); }
+  .avatar svg { width: 44px; height: 44px; }
+  .who h2 { margin: 0; font: 800 22px var(--sans); }
+  .who p { margin: 2px 0 0; font-size: 14px; color: #444; }
+  .assume { border-top: 1.5px solid var(--ink); padding: 10px 14px 12px; }
+  .assume .kicker { margin-bottom: 7px; }
+  .chips { display: flex; gap: 12px; flex-wrap: wrap; }
+  .chip { display: flex; align-items: center; gap: 6px; font: 700 14px var(--sans); }
+  .chip i { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font: 700 12px var(--grot); font-style: normal; }
+  .chip.ok i { background: var(--yellow); }
+  .chip.ko i { background: var(--ink); color: #fff; }
+  .chip.ko span { color: var(--grey); text-decoration: line-through; }
+  .mini { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1.5px solid var(--ink); border-radius: 8px; margin-bottom: 12px; }
+  .mini .avatar { width: 38px; height: 38px; } .mini .avatar svg { width: 26px; height: 26px; }
+  .mini b { font: 800 15px var(--sans); } .mini small { color: #555; font-size: 12px; display: block; }
+  .mini .chips { margin-left: auto; gap: 4px; } .mini .chip i { width: 18px; height: 18px; font-size: 10px; } .mini .chip span { display: none; }
+  .mapwrap { border: 1.5px solid var(--rule); border-radius: 8px; padding: 6px; margin-bottom: 14px; }
+  /* step panel */
+  .panel { animation: rise .5s ease-out both; }
+  .panel .step { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .panel .num { width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: var(--yellow); display: grid; place-items: center; font: 700 17px var(--grot); flex: none; }
+  .panel h3 { margin: 0; font: 800 21px/1.15 var(--sans); }
+  .panel .lead { font-size: 16px; line-height: 1.45; margin: 10px 0; }
+  .panel .note { font-size: 14px; line-height: 1.45; color: #333; background: var(--soft); border-left: 4px solid var(--blue); padding: 10px 12px; margin: 12px 0; border-radius: 0 6px 6px 0; animation: rise .4s ease-out both; }
+  .q { margin: 16px 0 6px; font: 700 17px/1.3 var(--sans); }
+  .opts { display: grid; gap: 8px; }
+  .opt { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px; border: 2px solid var(--ink); border-radius: 8px; background: var(--paper); font: 700 16px var(--sans); text-align: left; cursor: pointer; transition: transform .1s; }
+  .opt:active { transform: scale(.98); }
+  .opt .e { font-size: 22px; }
+  .opt.sel { background: var(--yellow); }
+  .opts.done .opt:not(.sel) { opacity: .45; }
+  .trends { display: grid; gap: 8px; margin: 12px 0; }
+  .trend { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1.5px solid var(--rule); border-radius: 8px; font-size: 14px; }
+  .trend.hit { border-color: var(--ink); background: var(--yellow); font-weight: 700; }
+  .trend b { font: 700 13px var(--grot); width: 22px; }
+  .order { border: 2px solid var(--ink); border-radius: 8px; padding: 14px; position: relative; overflow: hidden; margin: 12px 0; }
+  .order .art { font: 700 12px var(--grot); color: var(--grey); letter-spacing: .06em; }
+  .order h4 { margin: 2px 0 8px; font: 800 20px var(--sans); letter-spacing: .02em; }
+  .stamp { display: inline-block; border: 3px solid var(--red); color: var(--red); font: 800 15px var(--sans); letter-spacing: .04em; padding: 6px 10px; transform: rotate(-4deg); border-radius: 4px; animation: stamp .45s cubic-bezier(.2, 1.6, .4, 1) both .4s; }
+  .stamp.ok { border-color: var(--green); color: var(--green); }
+  @keyframes stamp { from { transform: rotate(-4deg) scale(2.4); opacity: 0; } }
+  .look { text-align: center; padding: 26px 10px; }
+  .look .big { font: 800 34px var(--sans); }
+  .look .eyes { font-size: 56px; animation: pulse2 1.4s ease-in-out infinite; display: inline-block; }
+  @keyframes pulse2 { 50% { transform: translateY(-6px); } }
+  .receipt { font: 500 13.5px/1.55 var(--grot); background: #fffdf6; border: 1px solid var(--rule); padding: 16px 16px 20px; margin: 12px 0; box-shadow: 0 2px 0 var(--rule); position: relative; animation: print 1.1s steps(14) both; transform-origin: top; }
+  @keyframes print { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+  .receipt .row { display: flex; justify-content: space-between; gap: 10px; }
+  .receipt .row span:last-child { text-align: right; font-weight: 700; }
+  .receipt hr { border: 0; border-top: 1.5px dashed var(--ink); margin: 8px 0; }
+  .receipt .hd { text-align: center; font-weight: 700; letter-spacing: .12em; }
+  .receipt .tot { font-weight: 700; font-size: 15px; }
+  .receipt .bar { height: 26px; margin-top: 10px; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 5px, transparent 5px 8px); }
+  footer { padding: 14px 16px 22px; font-size: 11px; color: var(--grey); text-align: center; line-height: 1.5; }
+  .btn { display: block; width: 100%; margin-top: 14px; padding: 15px; border: 0; border-radius: 30px; background: var(--blue); color: #fff; font: 700 16px var(--sans); cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <span class="tag">LIVE</span>
+    <span class="ttl">Your IKEA journey</span>
+    <span class="st"><span class="status-dot" id="dot"></span><span id="stxt">connecting</span></span>
+  </header>
+  <main id="main"><div class="wait">Connecting to the presentation…</div></main>
+  <footer>Student project · Innovation Strategy, University of Fribourg.<br>Not affiliated with IKEA. No personal data collected.</footer>
+</div>
+<script src="lib/mqtt.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/map.js"></script>
+<script>
+(function () {
+  const { PROFILES, ASSUMPTIONS, QUESTIONS, ZONES, PHASES, store, uid } = IKL;
+  const $main = document.getElementById("main");
+  let phase = null, run = null, id = null, rec = null, shown = null;
+
+  const AV = {
+    lena: '<svg viewBox="0 0 44 44" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="14" r="7"/><path d="M15 12c1-6 13-6 14 0M29 13c2 3 2 7 0 9"/><path d="M9 40c1-9 6-13 13-13s12 4 13 13"/></svg>',
+    jonas: '<svg viewBox="0 0 44 44" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="14" r="7"/><path d="M9 40c1-9 6-13 13-13s12 4 13 13"/><path d="M22 27l-2 6 2 3 2-3-2-6"/></svg>',
+    amira: '<svg viewBox="0 0 44 44" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="15" r="7"/><path d="M14 13c0-7 16-7 16 0"/><path d="M9 40c1-9 6-13 13-13s12 4 13 13"/><path d="M20 33h4M22 31v4"/></svg>',
+    family: '<svg viewBox="0 0 44 44" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="15" cy="13" r="5.5"/><circle cx="29" cy="13" r="5.5"/><circle cx="22" cy="27" r="3.5"/><path d="M5 38c0-8 4-12 10-12M39 38c0-8-4-12-10-12M16 40c0-5 3-7 6-7s6 2 6 7"/></svg>',
+  };
+
+  function chips(P) {
+    return '<div class="chips">' + ASSUMPTIONS.map((a) => `<span class="chip ${P.ok[a] ? "ok" : "ko"}"><i>${P.ok[a] ? "✓" : "✗"}</i><span>${a}</span></span>`).join("") + "</div>";
+  }
+  const score = (P) => ASSUMPTIONS.filter((a) => P.ok[a]).length;
+
+  function save() {
+    store.set("rec:" + run, { id, rec });
+    if (net.connected) net.publishRecord(run, id, Object.assign({ t: Date.now() }, rec));
+  }
+
+  function ensureRecord() {
+    const saved = store.get("rec:" + run);
+    if (saved && saved.rec && saved.rec.profile) { id = saved.id; rec = saved.rec; }
+    else { id = uid(); rec = { profile: IKL.Q.get("profile") in PROFILES ? IKL.Q.get("profile") : IKL.pickProfile(), a: {} }; save(); }
+  }
+
+  function question(key) {
+    const Qd = QUESTIONS[key], cur = rec.a[key];
+    return `<div class="q">${Qd.q}</div><div class="opts ${cur ? "done" : ""}" data-q="${key}">` +
+      Qd.opts.map(([v, e, l]) => `<button class="opt ${cur === v ? "sel" : ""}" data-v="${v}"><span class="e">${e}</span>${l}</button>`).join("") + "</div>";
+  }
+
+  function label(key, v) { const o = QUESTIONS[key].opts.find((x) => x[0] === v); return o ? o[2] : "–"; }
+
+  /* ---------- content per Step ---------- */
+  function stepBody(ph, P, pk) {
+    const urban = P.urban, a = rec.a;
+    switch (ph) {
+      case "s0": {
+        let fb = "";
+        if (a.travel) {
+          if (P.car) fb = (a.travel !== "car" ? "You have a car, so why not use it? " : "") + "Easy: drive, park, load the flat pack, home by dinner. <b>You are exactly the customer the blue box was built for.</b>";
+          else fb = (a.travel === "car" ? "Nice try, you don't own a car. 🙃 " : "") +
+            `So it's train, bus, then a flat pack carried home by hand. <b>The blue box assumes a car, time, space and the will to travel.</b> You tick ${score(P)} of 4.`;
+        }
+        return `<p class="lead">The classic IKEA: a big blue box outside the city, with a huge car park.</p>${question("travel")}${fb ? `<div class="note">${fb}</div>` : ""}`;
+      }
+      case "s1": {
+        const T = [["Urbanisation, smaller homes, fewer cars", urban], ["The customer journey moves online", pk !== "family"], ["Online specialists grow faster", false], ["Growth through new big stores slows", !urban]];
+        return `<p class="lead">Why does IKEA rebuild its model? Four forces are changing the market. The ones in yellow are <b>you</b>.</p>
+          <div class="trends">${T.map(([t, h], i) => `<div class="trend ${h ? "hit" : ""}"><b>${i + 1}</b>${t}</div>`).join("")}</div>
+          <div class="note">${urban ? "You are the trend. If customers like you no longer come to IKEA, IKEA has to come to them." : "You still love the blue box. But growth through new big stores is slowing, and the next generation lives in the city."}</div>`;
+      }
+      case "s2": {
+        const txt = {
+          lena: "A short walk from your studio. A planner helps you fit a bed, a desk and storage into 24 m².",
+          jonas: "Drop by after work: plan with an expert, order on the spot, get it delivered. No Saturday lost on the motorway.",
+          amira: "Close to home and easy to reach between shifts. Advice for a small room, delivered to your door.",
+          family: "Handy for planning the new kitchen. For everything else you'll still drive to the blue box: the two formats complement each other.",
+        }[pk];
+        return `<p class="lead">A new store appears on your map, <b>in the city centre</b>: smaller, curated, built around planning advice, ordering and home delivery.</p>
+          <div class="note"><span class="kicker" style="display:block;margin-bottom:4px">For ${P.name}</span>${txt}</div>`;
+      }
+      case "s3": {
+        let fb = "";
+        if (a.react) fb = urban
+          ? "That's the first challenge: <b>closer does not always mean faster.</b> In Manhattan, customers expected to take products home and couldn't."
+          : "The blue box still wins on take-away. That's why the studio <b>complements</b> it rather than replacing it.";
+        return `<p class="lead">You found the perfect piece. Time to take it home.</p>
+          <div class="order"><div class="art">ART. 704.211.35</div><h4>STADSLIV wall unit</h4>
+          ${urban ? '<span class="stamp">NOT AVAILABLE TO TAKE AWAY</span><p style="margin:12px 0 0;font-size:14px">Delivery date: <b>to be confirmed</b></p>'
+                  : '<span class="stamp ok">IN STOCK · TAKE IT HOME TODAY</span><p style="margin:12px 0 0;font-size:14px">Self-serve aisle, then straight into the car.</p>'}</div>
+          ${question("react")}${fb ? `<div class="note">${fb}</div>` : ""}`;
+      }
+      case "s4":
+        return `<div class="look"><div class="big">Will it fit?</div><p class="lead" style="margin:8px 0 18px">${P.home}</p><div class="eyes">👀</div><p class="lead"><b>Look at the screen.</b></p></div>`;
+      case "s5": {
+        const plan = urban ? "Planning Studio, Bern" : "Blue box, Lyssach";
+        const pick = urban ? "Home delivery" : "Take-away";
+        const total = urban ? "A customer IKEA can only win in the city" : "A customer the blue box already serves";
+        return `<p class="lead">Your journey is complete. Here is your receipt.</p>
+          <div class="receipt"><div class="hd">YOUR IKEA JOURNEY</div><hr>
+            <div class="row"><span>Customer</span><span>${P.name}${P.age ? ", " + P.age : ""}</span></div>
+            <div class="row"><span>Home</span><span>${P.home}</span></div>
+            <div class="row"><span>Getting there</span><span>${label("travel", a.travel)}</span></div>
+            <div class="row"><span>Planning</span><span>${plan}</span></div>
+            <div class="row"><span>Pick-up</span><span>${pick}</span></div>
+            <div class="row"><span>Your reaction</span><span>${label("react", a.react)}</span></div>
+            <div class="row"><span>Will it fit?</span><span>Checked in AR</span></div>
+            <div class="row"><span>Blue box assumptions</span><span>${score(P)} / 4</span></div>
+            <hr><div class="row tot"><span>TOTAL</span><span>${total}</span></div>
+            <div class="bar"></div><div class="hd" style="margin-top:8px;font-size:12px">TACK FÖR BESÖKET!</div></div>
+          ${question("after")}${a.after ? '<div class="note">Thanks! Look at the screen to see whether the room changed its mind.</div>' : ""}`;
+      }
+    }
+    return "";
+  }
+
+  function render(force) {
+    if (!run) return;
+    const P = PROFILES[rec.profile], pk = rec.profile;
+    const key = phase + "|" + JSON.stringify(rec.a);
+    if (!force && key === shown) return;
+    const scrollKeep = shown && shown.split("|")[0] === phase ? window.scrollY : 0;
+    shown = key;
+
+    if (phase === "join" || (!rec.a.before && (phase === "s0") && !rec.skipBefore)) {
+      $main.innerHTML = `<p class="kicker" style="margin:0 0 10px">Hej! Today you are…</p>
+        <div class="card"><div class="top"><b>Customer card</b><span style="font:700 12px var(--grot)">No. ${id.slice(0, 6).toUpperCase()}</span></div>
+          <div class="body"><div class="avatar">${AV[pk]}</div><div class="who"><h2>${P.name}${P.age ? ", " + P.age : ""}</h2><p>${P.role}</p><p>${P.home}</p></div></div>
+          <div class="assume"><div class="kicker">Blue box assumption</div>${chips(P)}</div></div>
+        <div class="panel">${question("before")}
+        ${rec.a.before ? '<div class="note">Thanks! Keep your phone close: the store opens with Step 0.</div>' : ""}</div>`;
+    } else {
+      const Zd = ZONES[phase];
+      $main.innerHTML = `<div class="mini"><div class="avatar">${AV[pk]}</div><div><b>${P.name}</b><small>${P.home}</small></div>${chips(P)}</div>
+        <div class="mapwrap">${storeMap(phase)}</div>
+        <div class="panel"><div class="kicker">${Zd.step}</div><div class="step"><span class="num">${Zd.n}</span><h3>${Zd.title}</h3></div>${stepBody(phase, P, pk)}</div>`;
+    }
+    if (scrollKeep) window.scrollTo(0, scrollKeep);
+    else if (force !== "keep") window.scrollTo(0, 0);
+  }
+
+  $main.addEventListener("click", (e) => {
+    const b = e.target.closest(".opt"); if (!b) return;
+    const q = b.parentElement.dataset.q;
+    rec.a[q] = b.dataset.v; save();
+    if (navigator.vibrate) try { navigator.vibrate(15); } catch (x) {}
+    render();
+  });
+
+  const net = IKL.connect({
+    onStatus(on) {
+      document.getElementById("dot").classList.toggle("on", on);
+      document.getElementById("stxt").textContent = on ? "live" : "reconnecting";
+      if (on && run && rec) save();
+    },
+    onState(st) {
+      const newRun = st.run !== run;
+      run = st.run; phase = PHASES.includes(st.phase) ? st.phase : "join";
+      if (newRun) {
+        ensureRecord();
+        // joined late (after Step 0): skip the "before" vote so it stays a true before.
+        if (PHASES.indexOf(phase) > 1 && !rec.a.before) { rec.skipBefore = true; }
+      }
+      render(true);
+    },
+  });
+})();
+</script>
+</body>
+</html>
