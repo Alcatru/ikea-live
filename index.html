@@ -41,6 +41,8 @@
   .legend .sw { border-color: var(--ink); border-width: 1.5px; }
   .legend { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; font: 700 12.5px var(--sans); margin: 2px 0 6px; }
   .look { text-align: center; font: 800 32px var(--sans); margin: 56px 0 20px; }
+  .look.rest { margin: 48px 0 20px; font: 600 16px/1.45 var(--sans); color: var(--grey); }
+  .look.rest .ico { width: 120px; height: 120px; }
   .look .ico { width: 96px; height: 96px; margin: 0 auto 14px; color: var(--blue); animation: pulse2 1.4s ease-in-out infinite; }
   @keyframes pulse2 { 50% { transform: translateY(-6px); } }
   .ctx { display: flex; gap: 12px; align-items: center; background: var(--soft); color: var(--ink); border-radius: 12px; padding: 10px 12px; margin-top: 12px; }
@@ -111,14 +113,33 @@
     return "";
   }
 
+  /* Once the person has answered the question of the current moment, the phone goes quiet: after a short confirmation it
+     shows a big "Look up!" until the next live moment, so people watch the presenters, not their phone. */
+  const NEED = { join: "before", s0: "got", s3: "react", end: "after" };
+  const answeredAt = {};
+  const SETTLE = 4500;
+  function resting() {
+    const k = NEED[phase], a = rec.a;
+    if (!a.home) return false;
+    if (phase === "join" && rec.late) return true;
+    if (phase === "s0" && !a.before && !rec.late) return false;   // still owes the gut-feeling vote
+    if (!k || !a[k]) return false;
+    return !answeredAt[phase] || Date.now() - answeredAt[phase] >= SETTLE;
+  }
+  const restScreen = () => `<div class="hero"><p class="tagy k">${phase === "end" ? "Thank you" : "Your answer is in"}</p><h1>Look up!</h1></div>
+    <div class="look rest">${ICON("up")}<p>${phase === "end" ? "The result is on the big screen." : "Watch the presentation.<br>We'll tell you when to grab your phone again."}</p></div>`;
+
   function render(force) {
     if (!run) return;
-    const key = phase + "|" + JSON.stringify(rec.a) + "|" + Object.keys(others).length + "|" + JSON.stringify(others).length;
+    const rest = resting();
+    const key = rest + "|" + phase + "|" + JSON.stringify(rec.a) + "|" + Object.keys(others).length + "|" + JSON.stringify(others).length;
     if (!force && key === shown) return;
-    const samePhase = shown && shown.split("|")[0] === phase, y = window.scrollY;
+    const samePhase = shown && shown.split("|")[1] === phase, y = window.scrollY;
     shown = key;
     const a = rec.a;
-    if (!a.home) {
+    if (rest) {
+      $main.innerHTML = restScreen();
+    } else if (!a.home) {
       $main.innerHTML = `<div class="hero"><p class="tagy k">Hej! Two taps, anonymous</p><h1>Where do you live?</h1></div><div style="height:12px"></div>${question("home").replace(/<div class="q">.*?<\/div>/, "")}`;
     } else if (phase === "join" || (phase === "s0" && !a.before && !rec.late)) {
       $main.innerHTML = `<div class="hero"><p class="tagy k">Before we start</p><h1>You are on the map.</h1></div>${map()}
@@ -136,6 +157,8 @@
   $main.addEventListener("click", (e) => {
     const b = e.target.closest(".opt"); if (!b) return;
     rec.a[b.parentElement.dataset.q] = b.dataset.v; save();
+    const answeredPhase = phase; answeredAt[answeredPhase] = Date.now();
+    setTimeout(() => { if (phase === answeredPhase) render(true); }, SETTLE + 50);
     if (navigator.vibrate) try { navigator.vibrate(15); } catch (x) {}
     render();
   });
@@ -148,7 +171,9 @@
     },
     onState(st) {
       const newRun = st.run !== run;
+      const prevPhase = phase;
       run = st.run; phase = PHASES.includes(st.phase) ? st.phase : "join";
+      if (prevPhase && prevPhase !== phase && NEED[phase] && navigator.vibrate) try { navigator.vibrate([60, 80, 60]); } catch (x) {} // a new question
       if (newRun) {
         others = {}; ensureRecord();
         if (PHASES.indexOf(phase) > 1 && !rec.a.before) rec.late = true; // joined after Step 0: no "before" vote
