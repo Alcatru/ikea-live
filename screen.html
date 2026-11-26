@@ -46,9 +46,9 @@
   .jsteps b { width: 1.9em; height: 1.9em; border-radius: 50%; background: var(--yellow); color: var(--ink); display: grid; place-items: center; font: 700 .9em var(--grot); flex: none; }
   .sticker { display: inline-block; margin-top: 2.2vw; background: #fff; color: var(--blue); font: 800 1.15em var(--sans); padding: .5em 1em; border-radius: 2em; transform: rotate(-3deg); }
   .jr { position: relative; height: calc(100vh - 6vw); display: flex; align-items: center; justify-content: center; }
-  .jmap { height: 100%; aspect-ratio: 1; background: #fff; border-radius: 50%; box-shadow: 0 1.2vw 3vw rgba(0,0,0,.28); padding: 1.2vh; }
+  .jmap { width: min(100%, calc(100vh - 6vw)); aspect-ratio: 1; box-sizing: border-box; background: #fff; border-radius: 50%; box-shadow: 0 1.2vw 3vw rgba(0,0,0,.28); padding: 1.2vh; }
   .jmap svg { width: 100%; height: 100%; display: block; }
-  .jcount { position: absolute; right: 0; bottom: 2vh; background: var(--yellow); color: var(--ink); font: 800 1.3em var(--sans); padding: .4em 1em .4em .5em; border-radius: 3em; box-shadow: 0 .6vw 1.4vw rgba(0,0,0,.25); display: flex; align-items: center; gap: .4em; }
+  .jcount { position: absolute; right: 1vw; bottom: 1vh; background: var(--yellow); color: var(--ink); font: 800 1.3em var(--sans); padding: .4em 1em .4em .5em; border-radius: 3em; box-shadow: 0 .6vw 1.4vw rgba(0,0,0,.25); display: flex; align-items: center; gap: .4em; }
   .jcount span { font: 700 2em/1 var(--grot); background: var(--ink); color: var(--yellow); border-radius: 2em; padding: .1em .45em; }
   .foot { position: absolute; right: 2vw; bottom: 1.2vw; font-size: .8em; color: var(--grey); display: flex; align-items: center; gap: .5em; z-index: 2; }
 </style>
