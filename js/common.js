@@ -46,25 +46,29 @@
       q: "Gut feeling: big IKEA stores outside the city. Still the right model?",
       opts: [["keep", "👍", "Yes, keep it"], ["change", "🔧", "No, change it"], ["unsure", "🤔", "Not sure"]],
     },
-    travel: {
-      q: "How would you get to IKEA Lyssach?",
-      opts: [["car", "🚗", "Drive"], ["train", "🚆", "Train + bus"], ["no", "🙅", "I wouldn't go"]],
+    home: {
+      q: "Where do you live?",
+      opts: [["centre", "🏙️", "City centre"], ["suburbs", "🏘️", "Suburbs"], ["country", "🌳", "Countryside"]],
+    },
+    got: {
+      q: "Last piece of furniture you bought: how did it get home?",
+      opts: [["car", "🚗", "My car"], ["lift", "🙋", "Someone drove me"], ["delivery", "🚚", "Delivered"], ["carried", "💪", "I carried it"]],
     },
     react: {
-      q: "How do you feel?",
-      opts: [["fine", "🙂", "Fine with me"], ["meh", "😐", "Annoying"], ["angry", "😡", "I wanted it today"]],
+      q: "Not in stock today. Delivered later. OK for you?",
+      opts: [["fine", "🙂", "Fine"], ["meh", "😐", "Meh"], ["angry", "😡", "I want it now"]],
     },
   };
   QUESTIONS.after = { q: "And now: big stores outside the city. Still the right model?", opts: QUESTIONS.before.opts };
 
   /* Store zones, one per Step. */
   const ZONES = {
-    s0: { n: 0, title: "Entrance & car park", step: "Step 0 · Unboxing IKEA" },
-    s1: { n: 1, title: "Showroom", step: "Step 1 · Why rebuild?" },
-    s2: { n: 2, title: "Planning Studio", step: "Step 2 · Designed for customers" },
-    s3: { n: 3, title: "Self-serve warehouse", step: "Step 3 · Assembly challenges" },
-    s4: { n: 4, title: "Your living room", step: "Step 4 · Beyond the furniture" },
-    s5: { n: 5, title: "Checkout", step: "Step 5 · Recommendations" },
+    s0: { n: 0, title: "The blue box", step: "Step 0 · Unboxing IKEA" },
+    s1: { n: 1, title: "Cities grow", step: "Step 1 · Why rebuild?" },
+    s2: { n: 2, title: "A studio in town", step: "Step 2 · Designed for customers" },
+    s3: { n: 3, title: "Waiting for delivery", step: "Step 3 · Assembly challenges" },
+    s4: { n: 4, title: "Will it fit?", step: "Step 4 · Beyond the furniture" },
+    s5: { n: 5, title: "Your journey", step: "Step 5 · Recommendations" },
     end: { n: 5, title: "Final vote", step: "After our recommendations" },
   };
 
@@ -114,12 +118,11 @@
 
   /* Aggregate phone records for the screen. */
   function tally(records) {
-    const out = { n: 0, profiles: {}, before: {}, travel: {}, react: {}, after: {} };
+    const out = { n: 0, before: {}, home: {}, got: {}, react: {}, after: {} };
     for (const id in records) {
-      const r = records[id]; if (!r || !r.profile) continue;
+      const r = records[id]; if (!r || !r.a) continue;
       out.n++;
-      out.profiles[r.profile] = (out.profiles[r.profile] || 0) + 1;
-      for (const k of ["before", "travel", "react", "after"]) {
+      for (const k of ["before", "home", "got", "react", "after"]) {
         const v = r.a && r.a[k]; if (v) out[k][v] = (out[k][v] || 0) + 1;
       }
     }
@@ -128,15 +131,15 @@
 
   /* Fake records for rehearsal / backup screenshots (?demo=40). */
   function demoRecords(n, phase) {
-    const idx = PHASES.indexOf(phase);
-    const recs = {};
+    const idx = PHASES.indexOf(phase), recs = {}, pick = (a) => a[Math.floor(Math.random() * a.length)];
     for (let i = 0; i < n; i++) {
-      const p = pickProfile(), P = PROFILES[p], a = {};
-      a.before = Math.random() < 0.45 ? "keep" : Math.random() < 0.5 ? "unsure" : "change";
-      if (idx >= 1) a.travel = P.car ? "car" : Math.random() < 0.55 ? "train" : "no";
-      if (idx >= 4) a.react = P.car ? "fine" : Math.random() < 0.62 ? "angry" : Math.random() < 0.7 ? "meh" : "fine";
-      if (idx >= 7 && Math.random() < 0.92) a.after = Math.random() < 0.68 ? "change" : Math.random() < 0.6 ? "keep" : "unsure";
-      recs["demo" + i] = { profile: p, a };
+      const a = {};
+      a.before = pick(["keep", "keep", "change", "unsure"]);
+      a.home = pick(["centre", "centre", "centre", "suburbs", "suburbs", "country"]);
+      if (idx >= 1) a.got = pick(["car", "lift", "lift", "delivery", "carried", "carried"]);
+      if (idx >= 4) a.react = pick(["fine", "meh", "angry", "angry"]);
+      if (idx >= 7) a.after = pick(["change", "change", "change", "keep", "unsure"]);
+      recs["demo" + i] = { a };
     }
     return recs;
   }

@@ -12,44 +12,28 @@
   /* Sized for a 16:9 Web Viewer frame inside PowerPoint: everything scales with the frame. */
   html, body { height: 100%; overflow: hidden; }
   body { font-size: 1.6vw; }
-  .stage { position: absolute; inset: 0; padding: 4vw 4.5vw; display: flex; flex-direction: column; }
-  .kick { font: 700 1.1em var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--grey); display: flex; align-items: center; gap: .6em; }
-  h1 { font: 800 3.1em/1.08 var(--sans); margin: .25em 0 .4em; }
-  .row { display: flex; gap: 4vw; flex: 1; min-height: 0; }
-  .qr { background: #fff; border: .35vw solid var(--ink); border-radius: 1vw; padding: 1.2vw; aspect-ratio: 1; height: 100%; max-height: 52vh; }
-  .qr svg, .qr img { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
-  .big { font: 700 7em/1 var(--grot); }
+  .stage { position: absolute; inset: 0; padding: 3.2vw 4vw; display: grid; grid-template-columns: 1fr 1.15fr; gap: 4vw; align-items: center; }
+  .stage.full { display: flex; flex-direction: column; align-items: stretch; }
+  .kick { font: 700 1.05em var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--grey); display: flex; align-items: center; gap: .6em; }
+  h1 { font: 800 2.6em/1.08 var(--sans); margin: .2em 0 .5em; }
+  .num { font: 700 8em/1 var(--grot); letter-spacing: -.02em; }
+  .num small { font-size: .45em; }
+  .cap { font: 700 1.5em/1.25 var(--sans); margin: .3em 0 0; max-width: 22em; }
   .muted { color: var(--grey); }
-  .mix { display: flex; gap: 1.6vw; margin-top: 1.4vw; flex-wrap: wrap; }
-  .mix div { border: .2vw solid var(--ink); border-radius: .8vw; padding: .6vw 1vw; font-weight: 700; }
-  .mix b { font: 700 1.4em var(--grot); margin-right: .3em; }
-  .bars { display: grid; gap: 1.3vw; margin-top: .5vw; }
-  .bar { display: grid; grid-template-columns: 13em 1fr 4.5em; align-items: center; gap: 1.2vw; font-weight: 700; font-size: 1.25em; }
-  .bar .tr { height: 2.6vw; background: var(--soft); border-radius: .4vw; overflow: hidden; }
-  .bar .fl { height: 100%; background: var(--blue); border-radius: .4vw; transition: width .8s cubic-bezier(.2, .8, .2, 1); }
-  .bar .fl.y { background: var(--yellow); } .bar .fl.k { background: var(--ink); } .bar .fl.g { background: var(--rule); }
-  .bar .v { font: 700 1.1em var(--grot); text-align: right; }
-  .callout { background: var(--yellow); padding: 1.4vw 1.8vw; border-radius: .6vw; font: 800 1.7em/1.2 var(--sans); margin-top: auto; }
-  .split { display: grid; grid-template-columns: 1.1fr 1fr; gap: 4vw; flex: 1; min-height: 0; }
-  .mapbox { height: 100%; min-height: 0; display: flex; align-items: center; justify-content: center; }
-  .mapbox svg { height: 100%; width: auto; max-width: 100%; }
-  /* Step 3: the room turns red */
-  .flood { position: absolute; left: 0; right: 0; bottom: 0; background: var(--red); transition: height 1.2s cubic-bezier(.2, .8, .2, 1); z-index: 0; }
-  .s3 .stage { z-index: 1; }
-  .dots { display: flex; flex-wrap: wrap; gap: .7vw; align-content: flex-start; }
-  .dot { width: 2.2vw; height: 2.2vw; border-radius: 50%; background: var(--rule); border: .18vw solid rgba(0, 0, 0, .15); transition: background .5s; }
-  .dot.angry { background: var(--red); border-color: #fff; } .dot.meh { background: #f28c28; border-color: #fff; } .dot.fine { background: var(--green); border-color: #fff; }
-  .stampbig { display: inline-block; background: #fff; color: var(--red); border: .4vw solid currentColor; padding: .4vw 1.2vw; font: 800 2.4em var(--sans); transform: rotate(-3deg); border-radius: .5vw; }
-  .legend { display: flex; gap: 2vw; font-weight: 700; margin-top: 1vw; }
-  .legend i { border: .15vw solid #fff; display: inline-block; width: 1.2em; height: 1.2em; border-radius: 50%; vertical-align: -.2em; margin-right: .4em; }
+  .mapcol { height: calc(100vh - 6.4vw); display: flex; align-items: center; justify-content: center; }
+  .mapcol svg { height: 100%; width: auto; }
+  .qr { background: #fff; border: .35vw solid var(--ink); border-radius: 1vw; padding: 1vw; width: 26vh; height: 26vh; margin-top: 1.2vw; }
+  .qr svg { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+  .legend { display: flex; gap: 1.6vw; font-weight: 700; margin-top: 1.4vw; font-size: 1.1em; }
+  .legend i { display: inline-block; width: 1em; height: 1em; border-radius: 50%; border: .15vw solid var(--ink); vertical-align: -.15em; margin-right: .4em; }
+  .callout { display: inline-block; background: var(--yellow); padding: .8vw 1.4vw; border-radius: .6vw; font: 800 1.4em/1.2 var(--sans); margin-top: 1.6vw; }
   .pair { display: grid; grid-template-columns: 9em 1fr; gap: 1vw 1.5vw; align-items: center; font-weight: 700; font-size: 1.25em; }
   .pair .lines { display: grid; gap: .5vw; }
   .pair .l { display: grid; grid-template-columns: 1fr 4em; gap: 1vw; align-items: center; }
   .pair .l .tr { height: 2vw; background: var(--soft); border-radius: .3vw; overflow: hidden; }
   .pair .l .fl { height: 100%; transition: width .9s cubic-bezier(.2, .8, .2, 1); }
   .pair .l span { font: 700 .95em var(--grot); text-align: right; }
-  .none { display: none; }
-  .foot { position: absolute; right: 2vw; bottom: 1.4vw; font-size: .8em; color: var(--grey); display: flex; align-items: center; gap: .5em; z-index: 2; }
+  .foot { position: absolute; right: 2vw; bottom: 1.2vw; font-size: .8em; color: var(--grey); display: flex; align-items: center; gap: .5em; z-index: 2; }
 </style>
 </head>
 <body>
@@ -58,18 +42,18 @@
 <script src="lib/mqtt.min.js"></script>
 <script src="lib/qrcode.js"></script>
 <script src="js/common.js"></script>
-<script src="js/map.js"></script>
+<script src="js/rings.js"></script>
 <script>
 (function () {
-  const { Q, CFG, PHASES, PROFILES, ZONES, QUESTIONS } = IKL;
+  const { Q, CFG, PHASES, ZONES, QUESTIONS } = IKL;
+  document.head.insertAdjacentHTML("beforeend", `<style>${ROOMMAP_CSS}</style>`);
   const root = document.getElementById("root");
   const pPhase = PHASES.includes(Q.get("phase")) ? Q.get("phase") : null;
-  const view = Q.get("view") || "auto";        // auto | none | map
+  const view = Q.get("view") || "auto";        // auto | none
   const drive = Q.get("drive") !== "0";         // this frame moves the phones to its phase
   const force = Q.get("force") === "1";         // allow moving backwards
   const demo = parseInt(Q.get("demo") || "0", 10);
   let gState = null, records = {}, timer = null;
-
   if (view === "none") document.body.style.background = "transparent";
 
   const phoneURL = (() => {
@@ -78,71 +62,44 @@
     if (Q.get("broker")) u.searchParams.set("broker", CFG.broker);
     return u.toString();
   })();
-  function qrSVG(text) {
-    const qr = qrcode(0, "M"); qr.addData(text); qr.make();
-    return qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
-  }
+  function qrSVG(text) { const qr = qrcode(0, "M"); qr.addData(text); qr.make(); return qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true }); }
   const pct = (a, b) => (b ? Math.round((100 * a) / b) : 0);
-
-  function bars(key, counts, colors) {
-    const tot = Object.values(counts).reduce((s, x) => s + x, 0);
-    return '<div class="bars">' + QUESTIONS[key].opts.map(([v, e, l], i) => {
-      const p = pct(counts[v] || 0, tot);
-      return `<div class="bar"><span>${e} ${l}</span><div class="tr"><div class="fl ${colors[i] || ""}" style="width:${p}%"></div></div><span class="v">${p}%</span></div>`;
-    }).join("") + "</div>";
-  }
+  const sum = (o) => Object.values(o).reduce((s, x) => s + x, 0);
+  const LEG = {
+    got: '<div class="legend"><span><i style="background:var(--blue)"></i>Own car</span><span><i style="background:var(--yellow)"></i>No own car</span></div>',
+    react: '<div class="legend"><span><i style="background:var(--green)"></i>Fine</span><span><i style="background:#f28c28"></i>Meh</span><span><i style="background:var(--red)"></i>Want it now</span></div>',
+  };
 
   function render() {
     const T = IKL.tally(records);
     const ph = pPhase || (gState && gState.phase) || "join";
-    document.getElementById("foot").textContent = `${T.n} connected · ${demo ? "demo data" : CFG.room}`;
+    document.getElementById("foot").textContent = `${T.n} phones · ${demo ? "demo data" : CFG.room}`;
     if (view === "none") { root.innerHTML = ""; return; }
-    document.body.className = ph;
-    const Zd = ZONES[ph];
-    const kick = Zd ? `<span class="kick">${Zd.step}</span>` : "";
+    const Zd = ZONES[ph], kick = Zd ? `<span class="kick">${Zd.step}</span>` : "";
+    const mapcol = `<div class="mapcol">${roomMap(ph, records, null, { big: true })}</div>`;
+    const panel = (title, big, cap, extra = "") => `<div class="stage"><div>${kick}<h1>${title}</h1>${big}${cap ? `<p class="cap">${cap}</p>` : ""}${extra}</div>${mapcol}</div>`;
+    const homes = sum(T.home);
 
-    if (view === "map" || ["s1", "s2", "s4", "s5"].includes(ph)) {
-      root.innerHTML = `<div class="stage"><div class="split"><div style="display:flex;flex-direction:column">${kick}
-        <h1>${Zd ? Zd.title : "Your IKEA journey"}</h1>
-        <p class="muted" style="font-size:1.3em;margin:0">Now lit on ${T.n} phones in the room.</p>
-        <div class="callout" style="margin-top:auto">${{ s1: "Why rebuild? Look at your phone.", s2: "A new store appears on your map.", s4: "Will it fit?", s5: "Your receipt is printing." }[ph] || ""}</div></div>
-        <div class="mapbox">${storeMap(ph)}</div></div></div>`;
-      return;
-    }
     if (ph === "join") {
-      const mix = Object.keys(PROFILES).map((k) => `<div><b>${T.profiles[k] || 0}</b>${PROFILES[k].name}</div>`).join("");
-      root.innerHTML = `<div class="stage"><div class="row">
-        <div class="qr">${qrSVG(phoneURL)}</div>
-        <div style="display:flex;flex-direction:column;flex:1">
-          <span class="kick">Before we start</span>
-          <h1>Scan.<br>Become an IKEA customer.</h1>
-          <div><span class="big">${T.n}</span> <span class="muted" style="font-size:1.4em;font-weight:700">customers in the store</span></div>
-          <div class="mix">${mix}</div>
-          <p class="muted" style="margin-top:auto;font-size:1em">${phoneURL.replace(/^https?:\/\//, "")}</p>
-        </div></div></div>`;
-      return;
-    }
-    if (ph === "s0") {
-      const noCar = Object.keys(PROFILES).filter((k) => !PROFILES[k].car).reduce((s, k) => s + (T.profiles[k] || 0), 0);
-      root.innerHTML = `<div class="stage">${kick}<h1>How would you get to IKEA Lyssach?</h1>
-        ${bars("travel", T.travel, ["", "y", "k"])}
-        <div class="callout"><span style="font-family:var(--grot)">${pct(noCar, T.n)}%</span> of this room has no car. The blue box was not built for you.</div></div>`;
-      return;
-    }
-    if (ph === "s3") {
-      const ans = (T.react.angry || 0) + (T.react.meh || 0) + (T.react.fine || 0);
-      const hot = pct((T.react.angry || 0) + 0.5 * (T.react.meh || 0), ans);
-      const dots = Object.values(records).filter((r) => r && r.profile).map((r) => `<span class="dot ${(r.a && r.a.react) || ""}"></span>`).join("");
-      root.innerHTML = `<div class="flood" style="height:${hot}%"></div><div class="stage">${kick}
-        <div><span class="stampbig">NOT AVAILABLE TO TAKE AWAY</span></div>
-        <h1 style="margin-top:.6em"><span style="font-family:var(--grot)">${pct((T.react.angry || 0) + (T.react.meh || 0), ans)}%</span> of you are frustrated.</h1>
-        <div class="dots">${dots}</div>
-        <div class="legend" style="background:#fff;align-self:flex-start;padding:.5vw 1vw;border-radius:.5vw"><span><i style="background:var(--red)"></i>I wanted it today</span><span><i style="background:#f28c28"></i>Annoying</span><span><i style="background:var(--green)"></i>Fine with me</span></div>
-        <p style="margin-top:auto;font-weight:800;font-size:1.5em;color:#fff;background:var(--ink);align-self:flex-start;padding:.5vw 1.2vw;border-radius:.5vw">Why? Let's find out.</p></div>`;
-      return;
-    }
-    if (ph === "end") {
-      const tb = Object.values(T.before).reduce((s, x) => s + x, 0), ta = Object.values(T.after).reduce((s, x) => s + x, 0);
+      root.innerHTML = `<div class="stage"><div><span class="kick">Before we start</span><h1>Scan. Put yourself on the map.</h1>
+        <div class="num">${homes}</div><p class="cap muted">people on the map</p><div class="qr">${qrSVG(phoneURL)}</div></div>${mapcol}</div>`;
+    } else if (ph === "s0") {
+      const g = sum(T.got), noCar = g - (T.got.car || 0);
+      root.innerHTML = panel("Your last furniture: how did it get home?", `<div class="num">${pct(noCar, g)}<small>%</small></div>`,
+        "of you did <b>not</b> use your own car.", LEG.got + `<div><span class="callout">The blue box assumes you have one.</span></div>`);
+    } else if (ph === "s1") {
+      root.innerHTML = panel("Cities grow.", `<div class="num">${pct(T.home.centre || 0, homes)}<small>%</small></div>`, "of this room lives in a city centre.");
+    } else if (ph === "s2") {
+      root.innerHTML = panel("A Planning Studio opens in town.", `<div class="num">${T.home.centre || 0}</div>`, "of you could walk there.");
+    } else if (ph === "s3") {
+      const r = sum(T.react), unhappy = (T.react.meh || 0) + (T.react.angry || 0);
+      root.innerHTML = panel("Not in stock today. Delivered later.", `<div class="num">${pct(unhappy, r)}<small>%</small></div>`, "of you are not OK with waiting.", LEG.react);
+    } else if (ph === "s4") {
+      root.innerHTML = panel("Will it fit?", "", "", "");
+    } else if (ph === "s5") {
+      root.innerHTML = panel("This room, mapped.", `<div class="num">${homes}</div>`, "customers took part.");
+    } else if (ph === "end") {
+      const tb = sum(T.before), ta = sum(T.after);
       const rows = QUESTIONS.before.opts.map(([v, e, l]) => {
         const b = pct(T.before[v] || 0, tb), a = pct(T.after[v] || 0, ta);
         return `<span>${e} ${l}</span><div class="lines">
@@ -150,10 +107,10 @@
           <div class="l"><div class="tr"><div class="fl" style="width:${a}%;background:var(--blue)"></div></div><span>${a}%</span></div></div>`;
       }).join("");
       const dy = pct(T.after.change || 0, ta) - pct(T.before.change || 0, tb);
-      root.innerHTML = `<div class="stage">${kick}<h1>Big stores outside the city: still the right model?</h1>
+      root.innerHTML = `<div class="stage full">${kick}<h1>Big stores outside the city: still the right model?</h1>
         <div class="legend" style="margin:0 0 1.2vw"><span><i style="background:var(--rule)"></i>Before we started</span><span><i style="background:var(--blue)"></i>Now</span></div>
         <div class="pair">${rows}</div>
-        <div class="callout">${ta ? (dy >= 0 ? "+" : "") + dy + " points for “change it” since the start." : "Vote on your phone."}</div></div>`;
+        <div><span class="callout">${ta ? (dy >= 0 ? "+" : "") + dy + " points for “change it” since the start." : "Vote on your phone."}</span></div></div>`;
     }
   }
   function soon() { clearTimeout(timer); timer = setTimeout(render, 250); }
