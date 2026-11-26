@@ -43,7 +43,7 @@
 
   const QUESTIONS = {
     before: {
-      q: "Gut feeling: IKEA opening small studios in city centres. Good strategy?",
+      q: "Gut feeling: should IKEA move closer to city centres?",
       opts: [["yes", "👍", "Yes"], ["unsure", "🤔", "Not sure"], ["no", "👎", "No"]],
     },
     travel: {
@@ -55,7 +55,7 @@
       opts: [["fine", "🙂", "Fine with me"], ["meh", "😐", "Annoying"], ["angry", "😡", "I wanted it today"]],
     },
   };
-  QUESTIONS.after = { q: "And now? IKEA's small city studios. Good strategy?", opts: QUESTIONS.before.opts };
+  QUESTIONS.after = { q: "And now? Should IKEA move closer to city centres?", opts: QUESTIONS.before.opts };
 
   /* Store zones, one per Step. */
   const ZONES = {

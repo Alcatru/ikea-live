@@ -66,10 +66,10 @@
     s += path("M150 176 H158", "s3");
     // delivery: blue box -> home, studio -> home
     s += path("M228 186 C240 186 244 214 254 214", "s3");
-    s += path("M293 130 V166", "s2");
+    if (i >= ORDER.indexOf("s2")) s += path("M293 130 V166", "s2");
     // city / blue box captions
     s += `<text x="22" y="40" class="mcap">IKEA LYSSACH · THE BLUE BOX</text>`;
-    s += `<text x="256" y="40" class="mcap">BERN</text>`;
+    s += `<text x="256" y="40" class="mcap">${i >= ORDER.indexOf("s2") ? "BERN CITY" : "HOME"}</text>`;
     return s;
   }
 
@@ -81,7 +81,7 @@
       </defs>
       <rect x="12" y="46" width="226" height="174" rx="4" fill="none" stroke="var(--blue)" stroke-width="3"/>
       <line x1="244" y1="30" x2="244" y2="292" stroke="var(--rule)" stroke-width="1" stroke-dasharray="2 4"/>
-      ${ORDER.map((z) => zone(z, phase)).join("")}
+      ${ORDER.filter((z) => z !== "s2" || ORDER.indexOf(phase) >= ORDER.indexOf("s2")).map((z) => zone(z, phase)).join("")}
       ${details(phase)}
     </svg>`;
   };

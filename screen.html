@@ -150,7 +150,7 @@
           <div class="l"><div class="tr"><div class="fl" style="width:${a}%;background:var(--blue)"></div></div><span>${a}%</span></div></div>`;
       }).join("");
       const dy = pct(T.after.yes || 0, ta) - pct(T.before.yes || 0, tb);
-      root.innerHTML = `<div class="stage">${kick}<h1>Small city studios: good strategy?</h1>
+      root.innerHTML = `<div class="stage">${kick}<h1>Should IKEA move closer to city centres?</h1>
         <div class="legend" style="margin:0 0 1.2vw"><span><i style="background:var(--rule)"></i>Before we started</span><span><i style="background:var(--blue)"></i>Now</span></div>
         <div class="pair">${rows}</div>
         <div class="callout">${ta ? (dy >= 0 ? "+" : "") + dy + " points of “yes” since the start." : "Vote on your phone."}</div></div>`;
