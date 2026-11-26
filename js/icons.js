@@ -14,6 +14,7 @@
     fine: '<circle cx="24" cy="24" r="17"/><circle cx="18" cy="20" r="1.8" fill="currentColor" stroke="none"/><circle cx="30" cy="20" r="1.8" fill="currentColor" stroke="none"/><path d="M16.5 28c4 5 11 5 15 0"/>',
     meh: '<circle cx="24" cy="24" r="17"/><circle cx="18" cy="20" r="1.8" fill="currentColor" stroke="none"/><circle cx="30" cy="20" r="1.8" fill="currentColor" stroke="none"/><path d="M17 30h14"/>',
     angry: '<circle cx="24" cy="24" r="17"/><path d="M15 16l6 3M33 16l-6 3"/><circle cx="18.5" cy="22" r="1.8" fill="currentColor" stroke="none"/><circle cx="29.5" cy="22" r="1.8" fill="currentColor" stroke="none"/><path d="M16.5 33c4-5 11-5 15 0"/>',
+    hand: '<path d="M17 26V11a2.5 2.5 0 0 1 5 0v12M22 22V8a2.5 2.5 0 0 1 5 0v14M27 22V10a2.5 2.5 0 0 1 5 0v14M32 24v-8a2.5 2.5 0 0 1 5 0v13c0 8-5 14-12 14-5 0-8-3-11-8l-5-8a2.5 2.5 0 0 1 4-3l3 4"/>',
     up: '<path d="M6 44h36"/><path d="M15 38V10M8 18l7-9 7 9M33 38V10M26 18l7-9 7 9" stroke-width="3.2"/>',
   };
   window.ICON = (k, cls = "") => `<svg class="ico ${cls}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">${P[k] || ""}</svg>`;

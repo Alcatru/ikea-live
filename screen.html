@@ -45,6 +45,8 @@
   .rows .fl { height: 100%; border-radius: 1vw; transition: width .9s cubic-bezier(.2, .8, .2, 1); }
   .rows .l span { font: 700 1.05em var(--grot); text-align: right; }
   .muted { color: rgba(255,255,255,.6); }
+  .hands { display: flex; align-items: center; gap: .7em; margin-top: 1.2vw; }
+  .hands .ico { width: 2.6em; height: 2.6em; color: var(--yellow); flex: none; }
   .endpill { position: static; display: inline-flex; margin-top: 2vw; box-shadow: none; font-size: 1.15em; }
 </style>
 </head>
@@ -67,8 +69,11 @@
   const force = Q.get("force") === "1";         // allow moving backwards
   const demo = parseInt(Q.get("demo") || "0", 10);
   let gState = null, records = {}, timer = null;
+  // Backup: no live connection after a few seconds (or ?offline=1) -> the same page asks for a show of hands instead.
+  let offline = Q.get("offline") === "1", everOn = false;
 
   const phoneURL = (() => {
+    if (Q.get("qr")) return Q.get("qr");
     const u = new URL("index.html", location.href);
     if (Q.get("room")) u.searchParams.set("room", CFG.room);
     if (Q.get("broker")) u.searchParams.set("broker", CFG.broker);
@@ -90,6 +95,8 @@
     document.getElementById("foot").textContent = `${T.n} phones · ${demo ? "demo data" : CFG.room}`;
     if (view === "none") { root.innerHTML = ""; document.body.style.background = "transparent"; return; }
     const Zd = ZONES[ph], homes = sum(T.home);
+    if (offline) records = {};
+    const hands = (t) => `<p class="cap hands">${ICON("hand")}<span>${t}</span></p>`;
     const right = (pill = "") => `<div class="jr"><div class="disc">${roomMap(ph, records, null, { big: true })}</div>${pill}</div>`;
     const onMap = `<div class="pill"><span>${homes}</span> on the map</div>`;
     const panel = (title, big, cap, extra = "") => `<div class="stage"><div><span class="tagy">${Zd.step}</span><h1>${title}</h1>${big}${cap ? `<p class="cap">${cap}</p>` : ""}${extra}</div>${right()}</div>`;
@@ -99,7 +106,13 @@
           <h1>Put yourself<br>on the map.</h1>
           <div class="jq"><div class="qrbig">${qrSVG(phoneURL)}</div>
             <div class="jsteps"><div><b class="badge">1</b>Scan</div><div><b class="badge">2</b>Tap where you live</div><div><b class="badge">3</b>Find your dot</div></div></div>
-          <div class="sticker">2 taps · anonymous</div></div>${right(onMap)}</div>`;
+          <div class="sticker">2 taps · anonymous</div></div>${right(offline ? "" : onMap)}</div>`;
+    } else if (offline && ph === "s0") {
+      root.innerHTML = panel("How did your last<br>furniture get home?", "", "", hands("Hands up if you brought it home in <b>your own car</b>.") + sticker("The blue box assumes you have one."));
+    } else if (offline && ph === "s3") {
+      root.innerHTML = panel("Not in stock.<br>Delivered later.", "", "", hands("Hands up if waiting a few days is <b>fine</b> for you."));
+    } else if (offline && ph === "end") {
+      root.innerHTML = panel("Big stores outside the city: still the right model?", "", "", hands("Hands up if IKEA should <b>change it</b>.") + hands("Hands up if IKEA should <b>keep it</b>."));
     } else if (ph === "s0") {
       const g = sum(T.got), noCar = g - (T.got.car || 0);
       root.innerHTML = panel("How did your last<br>furniture get home?", `<div class="num">${pct(noCar, g)}<small>%</small></div>`,
@@ -130,6 +143,7 @@
         <div><span class="pill endpill">${ta ? `<span>${(dy >= 0 ? "+" : "") + dy}</span> points for “change it” since the start` : "Vote on your phone."}</span></div></div>`;
     }
   }
+  setTimeout(() => { if (!everOn && !demo && !offline) { offline = true; render(); } }, 7000);
   function soon() { clearTimeout(timer); timer = setTimeout(render, 250); }
 
   if (demo) {
@@ -147,7 +161,7 @@
     else if (want > cur || force) net.publishState({ run: gState.run, phase: pPhase, t: Date.now() });
   }
   const net = IKL.connect({
-    onStatus(on) { document.getElementById("dot").classList.toggle("on", on); if (on) setTimeout(maybeDrive, 1200); },
+    onStatus(on) { if (on && !everOn) { everOn = true; if (offline && Q.get("offline") !== "1") { offline = false; } } document.getElementById("dot").classList.toggle("on", on); if (on) setTimeout(maybeDrive, 1200); },
     onState(st) { if (!gState || st.run !== gState.run) records = {}; gState = st; maybeDrive(); soon(); },
     onRecord(id, rec) { if (rec) records[id] = rec; else delete records[id]; soon(); },
   });
