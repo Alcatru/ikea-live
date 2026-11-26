@@ -43,7 +43,7 @@
 
   const QUESTIONS = {
     before: {
-      q: "Gut feeling: big IKEA stores outside the city. Still the right model?",
+      q: "Still the right model today?",
       opts: [["keep", "👍", "Yes, keep it"], ["change", "🔧", "No, change it"], ["unsure", "🤔", "Not sure"]],
     },
     home: {
