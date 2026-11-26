@@ -33,6 +33,23 @@
   .pair .l .tr { height: 2vw; background: var(--soft); border-radius: .3vw; overflow: hidden; }
   .pair .l .fl { height: 100%; transition: width .9s cubic-bezier(.2, .8, .2, 1); }
   .pair .l span { font: 700 .95em var(--grot); text-align: right; }
+  body.joinbg { background: var(--blue); }
+  body.joinbg .foot { color: rgba(255,255,255,.7); }
+  .join { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 3vw 4vw; gap: 3vw; color: #fff; }
+  .jk { display: inline-block; background: var(--yellow); color: var(--ink); font: 800 1em var(--sans); letter-spacing: .12em; text-transform: uppercase; padding: .35em .8em; border-radius: .3em; }
+  .join h1 { font: 800 3.6em/1.02 var(--sans); margin: .4em 0 .55em; color: #fff; }
+  .jq { display: flex; gap: 2vw; align-items: center; }
+  .qrbig { background: #fff; padding: 1.2vw; border-radius: 1.2vw; width: 34vh; height: 34vh; box-shadow: 0 1vw 2.5vw rgba(0,0,0,.25); flex: none; }
+  .qrbig svg { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+  .jsteps { display: grid; gap: 1.1vw; font: 700 1.3em/1.2 var(--sans); white-space: nowrap; }
+  .jsteps div { display: flex; align-items: center; gap: .7em; }
+  .jsteps b { width: 1.9em; height: 1.9em; border-radius: 50%; background: var(--yellow); color: var(--ink); display: grid; place-items: center; font: 700 .9em var(--grot); flex: none; }
+  .sticker { display: inline-block; margin-top: 2.2vw; background: #fff; color: var(--blue); font: 800 1.15em var(--sans); padding: .5em 1em; border-radius: 2em; transform: rotate(-3deg); }
+  .jr { position: relative; height: calc(100vh - 6vw); display: flex; align-items: center; justify-content: center; }
+  .jmap { height: 100%; aspect-ratio: 1; background: #fff; border-radius: 50%; box-shadow: 0 1.2vw 3vw rgba(0,0,0,.28); padding: 1.2vh; }
+  .jmap svg { width: 100%; height: 100%; display: block; }
+  .jcount { position: absolute; right: 0; bottom: 2vh; background: var(--yellow); color: var(--ink); font: 800 1.3em var(--sans); padding: .4em 1em .4em .5em; border-radius: 3em; box-shadow: 0 .6vw 1.4vw rgba(0,0,0,.25); display: flex; align-items: center; gap: .4em; }
+  .jcount span { font: 700 2em/1 var(--grot); background: var(--ink); color: var(--yellow); border-radius: 2em; padding: .1em .45em; }
   .foot { position: absolute; right: 2vw; bottom: 1.2vw; font-size: .8em; color: var(--grey); display: flex; align-items: center; gap: .5em; z-index: 2; }
 </style>
 </head>
@@ -75,14 +92,23 @@
     const ph = pPhase || (gState && gState.phase) || "join";
     document.getElementById("foot").textContent = `${T.n} phones · ${demo ? "demo data" : CFG.room}`;
     if (view === "none") { root.innerHTML = ""; return; }
+    document.body.classList.remove("joinbg");
     const Zd = ZONES[ph], kick = Zd ? `<span class="kick">${Zd.step}</span>` : "";
     const mapcol = `<div class="mapcol">${roomMap(ph, records, null, { big: true })}</div>`;
     const panel = (title, big, cap, extra = "") => `<div class="stage"><div>${kick}<h1>${title}</h1>${big}${cap ? `<p class="cap">${cap}</p>` : ""}${extra}</div>${mapcol}</div>`;
     const homes = sum(T.home);
 
     if (ph === "join") {
-      root.innerHTML = `<div class="stage"><div><span class="kick">Before we start</span><h1>Scan. Put yourself on the map.</h1>
-        <div class="num">${homes}</div><p class="cap muted">people on the map</p><div class="qr">${qrSVG(phoneURL)}</div></div>${mapcol}</div>`;
+      document.body.classList.add("joinbg");
+      root.innerHTML = `<div class="join">
+        <div class="jl"><span class="jk">Before we start</span>
+          <h1>Put yourself<br>on the map.</h1>
+          <div class="jq"><div class="qrbig">${qrSVG(phoneURL)}</div>
+            <div class="jsteps"><div><b>1</b>Scan</div><div><b>2</b>Tap where you live</div><div><b>3</b>Find your dot</div></div></div>
+          <div class="sticker">2 taps · anonymous</div></div>
+        <div class="jr"><div class="jmap">${roomMap(ph, records, null, { big: true })}</div>
+          <div class="jcount"><span>${homes}</span> on the map</div></div></div>`;
+      return;
     } else if (ph === "s0") {
       const g = sum(T.got), noCar = g - (T.got.car || 0);
       root.innerHTML = panel("Your last furniture: how did it get home?", `<div class="num">${pct(noCar, g)}<small>%</small></div>`,
