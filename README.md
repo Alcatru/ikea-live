@@ -1,4 +1,4 @@
-# IKEA live – « le public devient le client »
+# IKEA live – « public is client »
 
 Page web interactive pour la présentation du cas IKEA (Innovation Strategy, Université de Fribourg).
 Projet étudiant, sans lien avec IKEA. Aucune donnée personnelle n'est collectée.
