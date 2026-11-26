@@ -44,19 +44,19 @@
   const QUESTIONS = {
     before: {
       q: "Still the right model today?",
-      opts: [["keep", "👍", "Yes, keep it"], ["change", "🔧", "No, change it"], ["unsure", "🤔", "Not sure"]],
+      opts: [["keep", "keep", "Yes, keep it"], ["change", "change", "No, change it"], ["unsure", "unsure", "Not sure"]],
     },
     home: {
       q: "Where do you live?",
-      opts: [["centre", "🏙️", "City centre"], ["suburbs", "🏘️", "Suburbs"], ["country", "🌳", "Countryside"]],
+      opts: [["centre", "centre", "City centre"], ["suburbs", "suburbs", "Suburbs"], ["country", "country", "Countryside"]],
     },
     got: {
       q: "Last piece of furniture you bought: how did it get home?",
-      opts: [["car", "🚗", "My car"], ["lift", "🙋", "Someone drove me"], ["delivery", "🚚", "Delivered"], ["carried", "💪", "I carried it"]],
+      opts: [["car", "car", "My car"], ["lift", "lift", "Someone drove me"], ["delivery", "delivery", "Delivered"], ["carried", "carried", "I carried it"]],
     },
     react: {
       q: "Not in stock today. Delivered later. OK for you?",
-      opts: [["fine", "🙂", "Fine"], ["meh", "😐", "Meh"], ["angry", "😡", "I want it now"]],
+      opts: [["fine", "fine", "Fine"], ["meh", "meh", "Meh"], ["angry", "angry", "I want it now"]],
     },
   };
   QUESTIONS.after = { q: "And now: big stores outside the city. Still the right model?", opts: QUESTIONS.before.opts };
