@@ -107,6 +107,22 @@
   .spin { animation: spin 2s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
   .squeeze { animation: squeeze 1.2s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
   @keyframes squeeze { to { transform: scaleX(.92); } }
+  .one { font-size: 16.5px; line-height: 1.35; margin: 12px 0 4px; } .verdict .one { margin: 0; padding: 12px 14px 4px; }
+  .one.muted { color: var(--grey); font-size: 14px; text-align: center; }
+  .verdict { padding-bottom: 10px; }
+  .forces { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .force { border: 2px solid var(--rule); border-radius: 10px; padding: 12px 8px 10px; text-align: center; font: 700 14px var(--sans); color: var(--grey); animation: pop .5s ease-out both; }
+  .force:nth-child(2) { animation-delay: .12s } .force:nth-child(3) { animation-delay: .24s } .force:nth-child(4) { animation-delay: .36s }
+  .force.hit { border-color: var(--ink); background: var(--yellow); color: var(--ink); }
+  .forceart { width: 54px; height: 54px; display: block; margin: 0 auto 6px; }
+  .receipt .row { align-items: center; justify-content: flex-start; gap: 12px; margin: 4px 0; }
+  .receipt .row span:last-child { text-align: left; }
+  .receipt .ri { display: grid; place-items: center; width: 28px; }
+  .receipt .ric .chips { gap: 8px; } .receipt .ric .chip span { display: none; }
+  .stampin { animation: stamp .45s cubic-bezier(.2, 1.6, .4, 1) both .5s; transform-box: fill-box; transform-origin: center; }
+  .blink { animation: sweat 1.2s ease-in-out infinite; }
+  .bounce { animation: pulse2 1.4s ease-in-out infinite; }
+  .mapwrap svg { max-height: 210px; }
   footer { padding: 14px 16px 22px; font-size: 11px; color: var(--grey); text-align: center; line-height: 1.5; }
   .btn { display: block; width: 100%; margin-top: 14px; padding: 15px; border: 0; border-radius: 30px; background: var(--blue); color: #fff; font: 700 16px var(--sans); cursor: pointer; }
 </style>
@@ -165,62 +181,46 @@
   /* ---------- content per Step ---------- */
   function stepBody(ph, P, pk) {
     const urban = P.urban, a = rec.a;
+    const line = (t, cls = "") => `<p class="one ${cls}">${t}</p>`;
     switch (ph) {
       case "s0": {
         let fb = "";
         if (a.travel) fb = `<div class="verdict ${P.car ? "good" : "bad"}">
-            <div class="vscene">${ART.sceneS0(P, a.travel)}</div>
-            <p>${P.car ? (a.travel === "car" ? "" : "You have a car. ") + "<b>Easy. The blue box was built for you.</b>" : (a.travel === "car" ? "You don't own a car. " : "") + "<b>Train, bus, then carry it home.</b>"}</p>
+            ${ART.sceneS0(P, a.travel)}
+            ${line(P.car ? "<b>Easy. The blue box was built for you.</b>" : "<b>No car: train, bus, then carry it home.</b>")}
             <div class="big-chips">${chips(P)}</div></div>`;
         return `${question("travel")}${fb}`;
       }
       case "s1": {
-        const T = [["Urbanisation, smaller homes, fewer cars", urban], ["The customer journey moves online", pk !== "family"], ["Online specialists grow faster", false], ["Growth through new big stores slows", !urban]];
-        return `<p class="lead">Why does IKEA rebuild its model? Four forces are changing the market. The ones in yellow are <b>you</b>.</p>
-          <div class="trends">${T.map(([t, h], i) => `<div class="trend ${h ? "hit" : ""}"><b>${i + 1}</b>${t}</div>`).join("")}</div>
-          <div class="note">${urban ? "You are the trend. If customers like you no longer come to IKEA, IKEA has to come to them." : "You still love the blue box. But growth through new big stores is slowing, and the next generation lives in the city."}</div>`;
+        const F = [["city", "City life", urban], ["online", "Shopping online", urban], ["rivals", "Online rivals", false], ["slow", "Fewer new big stores", false]];
+        return `<div class="forces">${F.map(([k, t, h]) => `<div class="force ${h ? "hit" : ""}">${ART.force(k)}<span>${t}</span></div>`).join("")}</div>
+          ${line(urban ? "<b>Yellow = you.</b> You are why IKEA must change." : "None of these is you… <b>but more and more customers are like this.</b>")}`;
       }
-      case "s2": {
-        const txt = {
-          lena: "A short walk from your studio. A planner helps you fit a bed, a desk and storage into 24 m².",
-          jonas: "Drop by after work: plan with an expert, order on the spot, get it delivered. No Saturday lost on the motorway.",
-          amira: "Close to home and easy to reach between shifts. Advice for a small room, delivered to your door.",
-          family: "Handy for planning the new kitchen. For everything else you'll still drive to the blue box: the two formats complement each other.",
-        }[pk];
-        return `<p class="lead">A new store appears on your map, <b>in the city centre</b>: a <b>Planning Studio</b>. Smaller and curated, it is built around planning advice, ordering in store and home delivery.</p>
-          <div class="note"><span class="kicker" style="display:block;margin-bottom:4px">For ${P.name}</span>${txt}</div>`;
-      }
+      case "s2":
+        return `<div class="verdict good">${ART.sceneS2(P)}
+          ${line(urban ? "<b>New in town: a Planning Studio.</b> Plan, order, get it delivered." : "<b>New in town: a Planning Studio.</b> You'll still drive to the blue box.")}</div>`;
       case "s3": {
-        let fb = "";
-        if (a.react) fb = urban
-          ? "Hold on to that feeling. It is exactly what this step is about."
-          : "Lucky you: in the blue box, you take it home today.";
-        return `<p class="lead">You found the perfect piece. Time to take it home.</p>
-          <div class="order"><div class="art">ART. 704.211.35</div><h4>STADSLIV wall unit</h4>
-          ${urban ? '<span class="stamp">NOT AVAILABLE TO TAKE AWAY</span><p style="margin:12px 0 0;font-size:14px">Delivery date: <b>to be confirmed</b></p>'
-                  : '<span class="stamp ok">IN STOCK · TAKE IT HOME TODAY</span><p style="margin:12px 0 0;font-size:14px">Self-serve aisle, then straight into the car.</p>'}</div>
-          ${question("react")}${fb ? `<div class="note">${fb}</div>` : ""}`;
+        const fb = a.react ? line(urban ? "<b>Remember this feeling.</b>" : "<b>Lucky you: take it home today.</b>") : "";
+        return `<div class="verdict ${urban ? "bad" : "good"}">${ART.sceneS3(P)}
+          ${line(urban ? "<b>STADSLIV: not available to take away.</b> Delivery: to be confirmed." : "<b>STADSLIV: in stock.</b> Straight into the car.")}</div>
+          ${question("react")}${fb}`;
       }
       case "s4":
-        return `<div class="look"><div class="big">Will it fit?</div><p class="lead" style="margin:8px 0 18px">${P.home}</p><div class="eyes">👀</div><p class="lead"><b>Look at the screen.</b></p></div>`;
+        return `<div class="verdict good">${ART.sceneS4()}${line("<b>Will it fit?</b> 👀 Look at the screen.")}</div>`;
       case "s5":
       case "end": {
-        const plan = urban ? "Planning Studio, Bern" : "Blue box, Lyssach";
-        const pick = urban ? "Home delivery" : "Take-away";
-        const total = urban ? "City customer" : "Blue box customer";
-        return `<p class="lead">${ph === "end" ? "Time for the final vote." : "Your journey is complete. Here is your receipt."}</p>
-          <div class="receipt"><div class="hd">YOUR IKEA JOURNEY</div><hr>
-            <div class="row"><span>Customer</span><span>${P.name}${P.age ? ", " + P.age : ""}</span></div>
-            <div class="row"><span>Home</span><span>${P.home}</span></div>
-            <div class="row"><span>Getting there</span><span>${label("travel", a.travel)}</span></div>
-            <div class="row"><span>Planning</span><span>${plan}</span></div>
-            <div class="row"><span>Pick-up</span><span>${pick}</span></div>
-            <div class="row"><span>Your reaction</span><span>${label("react", a.react)}</span></div>
-            <div class="row"><span>Will it fit?</span><span>Checked in AR</span></div>
-            <div class="row"><span>Blue box assumptions</span><span>${score(P)} / 4</span></div>
-            <hr><div class="row tot"><span>TOTAL</span><span>${total}</span></div>
-            <div class="bar"></div><div class="hd" style="margin-top:8px;font-size:12px">TACK FÖR BESÖKET!</div></div>
-          ${ph === "s5" ? '<div class="note">One last vote is coming, once we have presented our recommendations.</div>' : question("after")}${ph === "end" && a.after ? '<div class="note">Thanks! Look at the screen to see whether the room changed its mind.</div>' : ""}`;
+        const rows = [
+          ["home", P.home],
+          ["pin", urban ? "Planning Studio, Bern" : "Blue box, Lyssach"],
+          ["box", urban ? "Home delivery" : "Take-away"],
+          ["fit", "Checked before buying"],
+        ];
+        const receipt = `<div class="receipt"><div class="hd">YOUR IKEA JOURNEY</div><hr>
+            ${rows.map(([k, v]) => `<div class="row"><span class="ri">${ART.ricon(k)}</span><span>${v}</span></div>`).join("")}
+            <hr><div class="ric">${chips(P)}</div>
+            <div class="bar"></div><div class="hd" style="margin-top:8px;font-size:12px">TACK FÖR BESÖKET!</div></div>`;
+        if (ph === "s5") return receipt + line("One last vote after our recommendations.", "muted");
+        return question("after") + (a.after ? line("<b>Thanks!</b> Look at the screen.") : "") + receipt;
       }
     }
     return "";

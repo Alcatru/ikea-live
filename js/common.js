@@ -43,8 +43,8 @@
 
   const QUESTIONS = {
     before: {
-      q: "Gut feeling: IKEA's classic model, big stores outside the city. Is it still the right model today?",
-      opts: [["keep", "👍", "Yes, keep it as it is"], ["change", "🔧", "No, it needs to change"], ["unsure", "🤔", "Not sure"]],
+      q: "Gut feeling: big IKEA stores outside the city. Still the right model?",
+      opts: [["keep", "👍", "Yes, keep it"], ["change", "🔧", "No, change it"], ["unsure", "🤔", "Not sure"]],
     },
     travel: {
       q: "How would you get to IKEA Lyssach?",
@@ -55,7 +55,7 @@
       opts: [["fine", "🙂", "Fine with me"], ["meh", "😐", "Annoying"], ["angry", "😡", "I wanted it today"]],
     },
   };
-  QUESTIONS.after = { q: "And now? Big stores outside the city: still the right model today?", opts: QUESTIONS.before.opts };
+  QUESTIONS.after = { q: "And now: big stores outside the city. Still the right model?", opts: QUESTIONS.before.opts };
 
   /* Store zones, one per Step. */
   const ZONES = {

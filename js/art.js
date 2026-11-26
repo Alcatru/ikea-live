@@ -90,9 +90,9 @@
     keep: () => `${R(18, 20, 84, 50, BLUE, 6)}${R(18, 30, 84, 8, YEL, 0)}${L([[18, 70], [102, 70]], 6)}${L([[44, 6], [56, 16], [80, 2]], 7, "var(--green)")}`,
     change: () => `${R(10, 26, 50, 40, BLUE, 6)}${L([[66, 46], [84, 46]], 6)}${L([[78, 38], [86, 46], [78, 54]], 6)}${R(92, 36, 22, 30, YEL, 5)}`,
     unsure: () => figAt(36, 2, 76, "shrug"),
-    fine: () => figAt(36, 2, 76, "happy"),
-    meh: () => figAt(36, 2, 76, "stand"),
-    angry: () => figAt(36, 2, 76, "sad", { sweat: true }),
+    fine: () => `<text x="60" y="60" text-anchor="middle" font-size="52">🙂</text>`,
+    meh: () => `<text x="60" y="60" text-anchor="middle" font-size="52">😐</text>`,
+    angry: () => `<text x="60" y="60" text-anchor="middle" font-size="52">😡</text>`,
   };
   const tile = (k) => (TILE[k] ? `<svg viewBox="0 0 120 80" class="tileart">${TILE[k]()}</svg>` : "");
 
@@ -115,5 +115,66 @@
     return s + "</svg>";
   }
 
-  window.ART = { fig, figAt, HOMES, car, icon, tile, sceneS0 };
+
+  /* Step 1: four forces as icons, viewBox 0 0 64 64 */
+  const FORCE = {
+    city: `<path d="M6 56V26h14v30M20 56V12h16v44M36 56V30h12v26M48 56V20h10v36" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linejoin="round"/><path d="M2 56h60" stroke="currentColor" stroke-width="3.6"/>`,
+    online: `<rect x="18" y="6" width="28" height="52" rx="5" fill="none" stroke="currentColor" stroke-width="3.6"/><path d="M25 26h3l3 12h10l3-9H30" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><circle cx="32" cy="43" r="2" fill="currentColor"/><circle cx="40" cy="43" r="2" fill="currentColor"/>`,
+    rivals: `<rect x="8" y="14" width="40" height="28" rx="3" fill="none" stroke="currentColor" stroke-width="3.6"/><path d="M2 48h52" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"/><path d="M16 34l9-8 6 5 10-10M35 21h6v6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M54 8v14" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"/>`,
+    slow: `<rect x="6" y="20" width="40" height="30" fill="none" stroke="currentColor" stroke-width="3.6"/><path d="M6 28h40" stroke="currentColor" stroke-width="3.6"/><path d="M55 14v30M48 37l7 7 7-7" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>`,
+  };
+  const force = (k) => `<svg viewBox="0 0 64 64" class="forceart">${FORCE[k]}</svg>`;
+
+  const BOX = (x, y, w, h) => `${R(x, y, w, h, KRAFT, 6)}${L([[x + 12, y + 16], [x + w * 0.45, y + 16]], 4)}${L([[x + w * 0.6, y + h - 14], [x + w - 12, y + h - 14]], 4)}`;
+
+  /* Step 2: a Planning Studio pops up in town, viewBox 0 0 360 200 */
+  function sceneS2(P) {
+    let s = `<svg viewBox="0 0 360 200" class="scene"><rect width="360" height="200" fill="#f4f8fc"/>`;
+    s += `<g fill="#fff" stroke="${INK}" stroke-width="4">` +
+      [[150, 70, 40, 80], [192, 50, 46, 100], [300, 64, 44, 86]].map(([x, y, w, h]) => `<rect x="${x}" y="${y}" width="${w}" height="${h}"/>`).join("") + "</g>";
+    s += L([[0, 150], [360, 150]], 4) + `<rect x="0" y="150" width="360" height="50" fill="#e9e9e9"/>`;
+    // the new studio
+    s += `<g class="pop" style="animation-delay:.3s"><rect x="244" y="92" width="52" height="58" fill="${YEL}" stroke="${INK}" stroke-width="5"/><rect x="258" y="118" width="24" height="32" fill="#fff" stroke="${INK}" stroke-width="4"/>
+      <path d="M270 40c-12 0-20 8-20 19 0 14 20 28 20 28s20-14 20-28c0-11-8-19-20-19z" fill="${BLUE}" stroke="${INK}" stroke-width="4"/><circle cx="270" cy="59" r="7" fill="#fff"/></g>`;
+    if (P.urban) {
+      s += `<path d="M96 186 C150 186 200 186 262 156" fill="none" stroke="${BLUE}" stroke-width="4" stroke-dasharray="6 6"/>`;
+      s += figAt(40, 96, 90, "happy");
+    } else {
+      s += car(10, 150, 0.42) + `<path d="M80 176 H350" stroke="${BLUE}" stroke-width="4" stroke-dasharray="6 6"/>`;
+    }
+    return s + "</svg>";
+  }
+
+  /* Step 3: the flat pack and the stamp, viewBox 0 0 360 190 */
+  function sceneS3(P) {
+    let s = `<svg viewBox="0 0 360 190" class="scene"><rect width="360" height="190" fill="#f4f8fc"/>`;
+    s += BOX(70, 40, 220, 120);
+    const ok = !P.urban;
+    s += `<g class="stampin"><rect x="88" y="78" width="184" height="44" rx="6" fill="#fff" fill-opacity=".85" stroke="${ok ? "var(--green)" : "var(--red)"}" stroke-width="6" transform="rotate(-6 180 100)"/>
+      <g transform="rotate(-6 180 100)">${ok
+        ? L([[160, 100], [174, 113], [200, 86]], 10, "var(--green)")
+        : L([[164, 84], [196, 116]], 10, "var(--red)") + L([[196, 84], [164, 116]], 10, "var(--red)")}</g></g>`;
+    return s + "</svg>";
+  }
+
+  /* Step 4: will it fit? viewBox 0 0 360 190 */
+  function sceneS4() {
+    let s = `<svg viewBox="0 0 360 190" class="scene"><rect width="360" height="190" fill="#f4f8fc"/>`;
+    s += L([[20, 160], [340, 160]], 5) + L([[60, 30], [60, 160]], 5) + L([[300, 30], [300, 160]], 5);
+    s += `<rect x="110" y="62" width="140" height="98" fill="none" stroke="${BLUE}" stroke-width="5" stroke-dasharray="9 7" class="blink"/>`;
+    s += L([[66, 44], [294, 44]], 4) + L([[66, 36], [66, 52]], 4) + L([[294, 36], [294, 52]], 4);
+    s += `<g class="bounce"><circle cx="180" cy="110" r="30" fill="${YEL}" stroke="${INK}" stroke-width="5"/><path d="M170 100a10 10 0 1 1 14 9c-3 2-4 4-4 8" fill="none" stroke="${INK}" stroke-width="6" stroke-linecap="round"/><circle cx="180" cy="127" r="3.6" fill="${INK}"/></g>`;
+    return s + "</svg>";
+  }
+
+  /* Small receipt icons, viewBox 0 0 48 48 */
+  const RICON = {
+    home: `<path d="M8 22L24 9l16 13v18H8z" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linejoin="round"/>`,
+    pin: `<path d="M24 5c-8 0-13 6-13 13 0 10 13 24 13 24s13-14 13-24c0-7-5-13-13-13z" fill="none" stroke="currentColor" stroke-width="3.4"/><circle cx="24" cy="18" r="4.5" fill="currentColor"/>`,
+    box: `<rect x="7" y="14" width="34" height="24" fill="none" stroke="currentColor" stroke-width="3.4"/><path d="M13 21h12" stroke="currentColor" stroke-width="3"/>`,
+    fit: `<rect x="8" y="12" width="32" height="24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-dasharray="5 4"/><path d="M17 24l5 5 9-10" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>`,
+  };
+  const ricon = (k) => `<svg viewBox="0 0 48 48" width="22" height="22">${RICON[k] || ICON[k] || ""}</svg>`;
+
+  window.ART = { fig, figAt, HOMES, car, icon, tile, sceneS0, force, sceneS2, sceneS3, sceneS4, ricon };
 })();
