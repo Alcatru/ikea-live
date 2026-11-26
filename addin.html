@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IKEA live · PowerPoint add-in</title>
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+<style>
+  html, body { margin: 0; height: 100%; background: #0058a3; color: #fff; font: 700 16px "Noto Sans", system-ui, sans-serif; }
+  .pick { height: 100%; display: grid; place-content: center; gap: 12px; text-align: center; }
+  .pick div { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  button { font: inherit; border: 0; border-radius: 8px; padding: 10px 14px; background: #ffdb00; color: #111; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="pick" id="pick" hidden>
+  <span>IKEA live · which moment is this slide?</span>
+  <div><button data-p="join">Before we start (QR)</button><button data-p="s0">Step 0</button><button data-p="s3">Step 3</button><button data-p="end">Final vote</button></div>
+</div>
+<script>
+/* The slide stores its moment in the add-in settings ("phase"); the frame then simply shows screen.html for that moment.
+   Inserted by hand: pick the moment once, it is saved in the presentation. */
+(function () {
+  function go(phase) { location.replace("screen.html?phase=" + phase + (phase === "join" ? "&force=1" : "")); }
+  function start() {
+    let phase = null;
+    try { phase = Office.context.document.settings.get("phase"); } catch (e) {}
+    const q = new URLSearchParams(location.search).get("phase");
+    if (phase || q) return go(phase || q);
+    document.getElementById("pick").hidden = false;
+    document.getElementById("pick").addEventListener("click", (e) => {
+      const b = e.target.closest("button"); if (!b) return;
+      try { Office.context.document.settings.set("phase", b.dataset.p); Office.context.document.settings.saveAsync(() => go(b.dataset.p)); }
+      catch (x) { go(b.dataset.p); }
+    });
+  }
+  if (window.Office && Office.onReady) Office.onReady(start); else start();
+})();
+</script>
+</body>
+</html>

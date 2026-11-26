@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- IKEA live: a PowerPoint content add-in that shows the live audience page inside a slide (free replacement for Web Viewer). -->
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ContentApp">
+  <Id>4b1d7e2a-1c3f-4e8a-9d2b-7a1e5c0f1ed0</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Alcatru (student project)</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="IKEA live"/>
+  <Description DefaultValue="Shows the live audience map of the IKEA presentation inside a slide."/>
+  <IconUrl DefaultValue="https://alcatru.github.io/ikea-live/addin/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://alcatru.github.io/ikea-live/addin/icon-64.png"/>
+  <SupportUrl DefaultValue="https://github.com/Alcatru/ikea-live"/>
+  <AppDomains>
+    <AppDomain>https://alcatru.github.io</AppDomain>
+  </AppDomains>
+  <Hosts>
+    <Host Name="Presentation"/>
+  </Hosts>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://alcatru.github.io/ikea-live/addin.html"/>
+    <RequestedWidth>800</RequestedWidth>
+    <RequestedHeight>450</RequestedHeight>
+  </DefaultSettings>
+  <Permissions>ReadWriteDocument</Permissions>
+  <AllowSnapshot>true</AllowSnapshot>
+</OfficeApp>
