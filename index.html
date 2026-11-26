@@ -117,7 +117,7 @@
      shows a big "Look up!" until the next live moment, so people watch the presenters, not their phone. */
   const NEED = { join: "before", s0: "got", s3: "react", end: "after" };
   const answeredAt = {};
-  const SETTLE = 4500;
+  const SETTLE = parseInt(IKL.Q.get("settle") || "4500", 10);
   function resting() {
     const k = NEED[phase], a = rec.a;
     if (!a.home) return false;
