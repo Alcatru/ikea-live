@@ -32,10 +32,11 @@
   const { PHASES, ZONES, CFG, Q } = IKL;
   let st = null, n = 0; const recs = {};
   const names = { join: "QR · join", end: "Final vote" };
+  const MOMENTS = ["join", "s0", "s3", "end"]; // the 4 moments where the audience answers (STADSLIV stays the thread in between)
   const grid = document.getElementById("grid");
   function draw() {
     document.getElementById("now").textContent = st ? `Now: ${st.phase === "join" ? "join" : ZONES[st.phase].step} · ${n} phones` : "No session yet";
-    grid.innerHTML = PHASES.map((p) => `<button data-p="${p}" class="${st && st.phase === p ? "cur" : ""}">${names[p] || ZONES[p].step}</button>`).join("") +
+    grid.innerHTML = MOMENTS.map((p) => `<button data-p="${p}" class="${st && st.phase === p ? "cur" : ""}">${names[p] || ZONES[p].step}</button>`).join("") +
       '<button class="reset" data-reset="1">New session (resets all phones)</button>';
   }
   grid.addEventListener("click", (e) => {
@@ -51,7 +52,7 @@
   const extra = (Q.get("room") ? "&room=" + CFG.room : "") + (Q.get("broker") ? "&broker=" + encodeURIComponent(CFG.broker) : "");
   const base = new URL("screen.html", location.href).toString();
   document.getElementById("links").innerHTML = "<b>Web Viewer addresses (one per Step opening slide)</b>" +
-    PHASES.map((p) => `<div>${names[p] || ZONES[p].step}<code>${base}?phase=${p}${extra}</code></div>`).join("");
+    MOMENTS.map((p) => `<div>${names[p] || ZONES[p].step}<code>${base}?phase=${p}${extra}</code></div>`).join("");
   const net = IKL.connect({
     onStatus(on) { document.getElementById("dot").classList.toggle("on", on); },
     onState(s) { if (!st || s.run !== st.run) { for (const k in recs) delete recs[k]; n = 0; } st = s; draw(); },

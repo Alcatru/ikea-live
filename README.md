@@ -11,7 +11,7 @@ Projet étudiant, sans lien avec IKEA. Aucune donnée personnelle n'est collect�
 | `screen.html?phase=…` | le PowerPoint (complément Web Viewer) | fait avancer tous les téléphones **et** affiche les résultats de la salle |
 | `control.html` | un présentateur (secours) | télécommande manuelle + bouton « New session » |
 
-Phases : `join` (QR), `s0` … `s5` (une par Step), `end` (revote final, à mettre sur la dernière slide des recommandations).
+**4 moments seulement** (STADSLIV reste le fil rouge du deck entre les Steps) : `join` (QR, avant la présentation), `s0` (ouverture du Step 0), `s3` (ouverture du Step 3), `end` (dernière slide des recommandations). Les phases `s1`, `s2`, `s4`, `s5` existent encore dans le code mais ne sont pas utilisées.
 
 ## Pilotage depuis PowerPoint
 
