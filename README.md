@@ -11,7 +11,7 @@ Projet étudiant, sans lien avec IKEA. Aucune donnée personnelle n'est collect�
 | `screen.html?phase=…` | le PowerPoint (complément Web Viewer) | fait avancer tous les téléphones **et** affiche les résultats de la salle |
 | `control.html` | un présentateur (secours) | télécommande manuelle + bouton « New session » |
 
-Phases : `join` (QR), `s0` … `s5` (un par Step).
+Phases : `join` (QR), `s0` … `s5` (une par Step), `end` (revote final, à mettre sur la dernière slide des recommandations).
 
 ## Pilotage depuis PowerPoint
 

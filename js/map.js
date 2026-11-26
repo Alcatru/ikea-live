@@ -74,6 +74,7 @@
   }
 
   window.storeMap = function (phase) {
+    if (phase === "end") phase = "s5";
     return `<svg viewBox="0 0 340 300" class="storemap" role="img" aria-label="IKEA store map">
       <defs>${hatch("hatch")}
         <marker id="arB" viewBox="0 0 8 8" refX="5" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="var(--blue)"/></marker>

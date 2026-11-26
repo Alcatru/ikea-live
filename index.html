@@ -162,8 +162,8 @@
       case "s3": {
         let fb = "";
         if (a.react) fb = urban
-          ? "That's the first challenge: <b>closer does not always mean faster.</b> In Manhattan, customers expected to take products home and couldn't."
-          : "The blue box still wins on take-away. That's why the studio <b>complements</b> it rather than replacing it.";
+          ? "Hold on to that feeling. It is exactly what this step is about."
+          : "Lucky you: in the blue box, you take it home today.";
         return `<p class="lead">You found the perfect piece. Time to take it home.</p>
           <div class="order"><div class="art">ART. 704.211.35</div><h4>STADSLIV wall unit</h4>
           ${urban ? '<span class="stamp">NOT AVAILABLE TO TAKE AWAY</span><p style="margin:12px 0 0;font-size:14px">Delivery date: <b>to be confirmed</b></p>'
@@ -172,11 +172,12 @@
       }
       case "s4":
         return `<div class="look"><div class="big">Will it fit?</div><p class="lead" style="margin:8px 0 18px">${P.home}</p><div class="eyes">👀</div><p class="lead"><b>Look at the screen.</b></p></div>`;
-      case "s5": {
+      case "s5":
+      case "end": {
         const plan = urban ? "Planning Studio, Bern" : "Blue box, Lyssach";
         const pick = urban ? "Home delivery" : "Take-away";
-        const total = urban ? "A customer IKEA can only win in the city" : "A customer the blue box already serves";
-        return `<p class="lead">Your journey is complete. Here is your receipt.</p>
+        const total = urban ? "City customer" : "Blue box customer";
+        return `<p class="lead">${ph === "end" ? "Time for the final vote." : "Your journey is complete. Here is your receipt."}</p>
           <div class="receipt"><div class="hd">YOUR IKEA JOURNEY</div><hr>
             <div class="row"><span>Customer</span><span>${P.name}${P.age ? ", " + P.age : ""}</span></div>
             <div class="row"><span>Home</span><span>${P.home}</span></div>
@@ -188,7 +189,7 @@
             <div class="row"><span>Blue box assumptions</span><span>${score(P)} / 4</span></div>
             <hr><div class="row tot"><span>TOTAL</span><span>${total}</span></div>
             <div class="bar"></div><div class="hd" style="margin-top:8px;font-size:12px">TACK FÖR BESÖKET!</div></div>
-          ${question("after")}${a.after ? '<div class="note">Thanks! Look at the screen to see whether the room changed its mind.</div>' : ""}`;
+          ${ph === "s5" ? '<div class="note">One last vote is coming, once we have presented our recommendations.</div>' : question("after")}${ph === "end" && a.after ? '<div class="note">Thanks! Look at the screen to see whether the room changed its mind.</div>' : ""}`;
       }
     }
     return "";
@@ -206,7 +207,7 @@
       $main.innerHTML = `<p class="kicker" style="margin:0 0 10px">Hej! Today you are…</p>
         <div class="card"><div class="top"><b>Customer card</b><span style="font:700 12px var(--grot)">No. ${id.slice(0, 6).toUpperCase()}</span></div>
           <div class="body"><div class="avatar">${AV[pk]}</div><div class="who"><h2>${P.name}${P.age ? ", " + P.age : ""}</h2><p>${P.role}</p><p>${P.home}</p></div></div>
-          <div class="assume"><div class="kicker">Blue box assumption</div>${chips(P)}</div></div>
+          </div>
         <div class="panel">${question("before")}
         ${rec.a.before ? '<div class="note">Thanks! Keep your phone close: the store opens with Step 0.</div>' : ""}</div>`;
     } else {

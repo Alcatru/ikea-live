@@ -6,7 +6,7 @@
     room: (Q.get("room") || "hej-unifr-7q4k").replace(/[^a-z0-9-]/gi, ""),
   };
   CFG.base = "ikea-live/" + CFG.room;
-  const PHASES = ["join", "s0", "s1", "s2", "s3", "s4", "s5"];
+  const PHASES = ["join", "s0", "s1", "s2", "s3", "s4", "s5", "end"];
 
   /* Profiles mirror the deck's "blue box assumption" badge: Car, Time, Space, Travel. */
   const PROFILES = {
@@ -43,8 +43,8 @@
 
   const QUESTIONS = {
     before: {
-      q: "Gut feeling: should IKEA move closer to city centres?",
-      opts: [["yes", "👍", "Yes"], ["unsure", "🤔", "Not sure"], ["no", "👎", "No"]],
+      q: "Gut feeling: IKEA's classic model, big stores outside the city. Is it still the right model today?",
+      opts: [["keep", "👍", "Yes, keep it as it is"], ["change", "🔧", "No, it needs to change"], ["unsure", "🤔", "Not sure"]],
     },
     travel: {
       q: "How would you get to IKEA Lyssach?",
@@ -55,7 +55,7 @@
       opts: [["fine", "🙂", "Fine with me"], ["meh", "😐", "Annoying"], ["angry", "😡", "I wanted it today"]],
     },
   };
-  QUESTIONS.after = { q: "And now? Should IKEA move closer to city centres?", opts: QUESTIONS.before.opts };
+  QUESTIONS.after = { q: "And now? Big stores outside the city: still the right model today?", opts: QUESTIONS.before.opts };
 
   /* Store zones, one per Step. */
   const ZONES = {
@@ -65,6 +65,7 @@
     s3: { n: 3, title: "Self-serve warehouse", step: "Step 3 · Assembly challenges" },
     s4: { n: 4, title: "Your living room", step: "Step 4 · Beyond the furniture" },
     s5: { n: 5, title: "Checkout", step: "Step 5 · Recommendations" },
+    end: { n: 5, title: "Final vote", step: "After our recommendations" },
   };
 
   function uid() {
@@ -131,10 +132,10 @@
     const recs = {};
     for (let i = 0; i < n; i++) {
       const p = pickProfile(), P = PROFILES[p], a = {};
-      a.before = Math.random() < 0.34 ? "yes" : Math.random() < 0.55 ? "unsure" : "no";
+      a.before = Math.random() < 0.45 ? "keep" : Math.random() < 0.5 ? "unsure" : "change";
       if (idx >= 1) a.travel = P.car ? "car" : Math.random() < 0.55 ? "train" : "no";
       if (idx >= 4) a.react = P.car ? "fine" : Math.random() < 0.62 ? "angry" : Math.random() < 0.7 ? "meh" : "fine";
-      if (idx >= 6 && Math.random() < 0.92) a.after = Math.random() < 0.66 ? "yes" : Math.random() < 0.6 ? "unsure" : "no";
+      if (idx >= 7 && Math.random() < 0.92) a.after = Math.random() < 0.68 ? "change" : Math.random() < 0.6 ? "keep" : "unsure";
       recs["demo" + i] = { profile: p, a };
     }
     return recs;

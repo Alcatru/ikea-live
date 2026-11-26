@@ -31,7 +31,7 @@
 (function () {
   const { PHASES, ZONES, CFG, Q } = IKL;
   let st = null, n = 0; const recs = {};
-  const names = { join: "QR · join" };
+  const names = { join: "QR · join", end: "Final vote" };
   const grid = document.getElementById("grid");
   function draw() {
     document.getElementById("now").textContent = st ? `Now: ${st.phase === "join" ? "join" : ZONES[st.phase].step} · ${n} phones` : "No session yet";

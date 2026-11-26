@@ -101,11 +101,11 @@
     const Zd = ZONES[ph];
     const kick = Zd ? `<span class="kick">${Zd.step}</span>` : "";
 
-    if (view === "map" || ["s1", "s2", "s4"].includes(ph)) {
+    if (view === "map" || ["s1", "s2", "s4", "s5"].includes(ph)) {
       root.innerHTML = `<div class="stage"><div class="split"><div style="display:flex;flex-direction:column">${kick}
         <h1>${Zd ? Zd.title : "Your IKEA journey"}</h1>
-        <p class="muted" style="font-size:1.3em;margin:0">${ph === "s4" ? "Will it fit? Look at the screen." : "Now lit on " + T.n + " phones in the room."}</p>
-        <div class="callout" style="margin-top:auto">${{ s1: "You are the trend.", s2: "A new store appears in the city centre.", s4: "Will it fit?" }[ph] || ""}</div></div>
+        <p class="muted" style="font-size:1.3em;margin:0">Now lit on ${T.n} phones in the room.</p>
+        <div class="callout" style="margin-top:auto">${{ s1: "Why rebuild? Look at your phone.", s2: "A new store appears on your map.", s4: "Will it fit?", s5: "Your receipt is printing." }[ph] || ""}</div></div>
         <div class="mapbox">${storeMap(ph)}</div></div></div>`;
       return;
     }
@@ -138,10 +138,10 @@
         <h1 style="margin-top:.6em"><span style="font-family:var(--grot)">${pct((T.react.angry || 0) + (T.react.meh || 0), ans)}%</span> of you are frustrated.</h1>
         <div class="dots">${dots}</div>
         <div class="legend" style="background:#fff;align-self:flex-start;padding:.5vw 1vw;border-radius:.5vw"><span><i style="background:var(--red)"></i>I wanted it today</span><span><i style="background:#f28c28"></i>Annoying</span><span><i style="background:var(--green)"></i>Fine with me</span></div>
-        <p style="margin-top:auto;font-weight:800;font-size:1.5em;color:#fff;background:var(--ink);align-self:flex-start;padding:.5vw 1.2vw;border-radius:.5vw">Closer does not always mean faster.</p></div>`;
+        <p style="margin-top:auto;font-weight:800;font-size:1.5em;color:#fff;background:var(--ink);align-self:flex-start;padding:.5vw 1.2vw;border-radius:.5vw">Why? Let's find out.</p></div>`;
       return;
     }
-    if (ph === "s5") {
+    if (ph === "end") {
       const tb = Object.values(T.before).reduce((s, x) => s + x, 0), ta = Object.values(T.after).reduce((s, x) => s + x, 0);
       const rows = QUESTIONS.before.opts.map(([v, e, l]) => {
         const b = pct(T.before[v] || 0, tb), a = pct(T.after[v] || 0, ta);
@@ -149,11 +149,11 @@
           <div class="l"><div class="tr"><div class="fl" style="width:${b}%;background:var(--rule)"></div></div><span class="muted">${b}%</span></div>
           <div class="l"><div class="tr"><div class="fl" style="width:${a}%;background:var(--blue)"></div></div><span>${a}%</span></div></div>`;
       }).join("");
-      const dy = pct(T.after.yes || 0, ta) - pct(T.before.yes || 0, tb);
-      root.innerHTML = `<div class="stage">${kick}<h1>Should IKEA move closer to city centres?</h1>
+      const dy = pct(T.after.change || 0, ta) - pct(T.before.change || 0, tb);
+      root.innerHTML = `<div class="stage">${kick}<h1>Big stores outside the city: still the right model?</h1>
         <div class="legend" style="margin:0 0 1.2vw"><span><i style="background:var(--rule)"></i>Before we started</span><span><i style="background:var(--blue)"></i>Now</span></div>
         <div class="pair">${rows}</div>
-        <div class="callout">${ta ? (dy >= 0 ? "+" : "") + dy + " points of “yes” since the start." : "Vote on your phone."}</div></div>`;
+        <div class="callout">${ta ? (dy >= 0 ? "+" : "") + dy + " points for “it needs to change” since the start." : "Vote on your phone."}</div></div>`;
     }
   }
   function soon() { clearTimeout(timer); timer = setTimeout(render, 250); }
