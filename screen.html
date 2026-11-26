@@ -9,62 +9,48 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <style>
-  /* Sized for a 16:9 Web Viewer frame inside PowerPoint: everything scales with the frame. Same grammar as the deck:
-     kraft / white pages, blue kicker, black step badge, IKEA Sans titles, Space Grotesk text, black takeaway bar, square corners. */
+  /* Sized for a 16:9 Web Viewer frame inside PowerPoint: everything scales with the frame.
+     One look for every page: the blue IKEA poster (yellow tag, white type, white cards, map on a white disc, yellow pills). */
   html, body { height: 100%; overflow: hidden; }
-  body { font-size: 1.6vw; }
-  body.kraft { background: var(--kraft); }
-  body.blue { background: var(--blue); }
-  .prog { position: absolute; top: 0; left: 0; right: 0; display: grid; grid-template-columns: repeat(6, 1fr); gap: .25vw; }
-  .prog i { height: .45vw; background: #d4d4d4; }
-  .prog i.on { background: var(--yellow); }
-  body.kraft .prog i:not(.on) { background: #cdbb9c; }
-  .stage { position: absolute; inset: 0; padding: 2.6vw 4.5vw 3.4vw; display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; align-items: center; }
-  .stage.full { display: flex; flex-direction: column; justify-content: center; align-items: stretch; }
-  .ttl { display: flex; align-items: flex-start; gap: .45em; font: 800 2.2em/1.06 var(--head); margin: .25em 0 .9em; letter-spacing: -.01em; }
-  .ttl .badge { font-size: .62em; width: 1.6em; height: 1.6em; margin-top: .14em; }
-  .num { font: 800 9em/.9 var(--head); letter-spacing: -.03em; }
-  .num small { font-size: .42em; letter-spacing: 0; }
-  .cap { font: 500 1.35em/1.3 var(--grot); margin: .5em 0 0; max-width: 20em; }
-  .cap b { font-weight: 700; }
-  .legend { display: flex; gap: 1.8vw; font: 700 1em var(--grot); margin-top: 1.6vw; }
+  body { font-size: 1.6vw; background: var(--blue); color: #fff; }
+  .stage { position: absolute; inset: 0; display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; padding: 3vw 4vw; gap: 3vw; }
+  .stage.full { display: flex; flex-direction: column; justify-content: center; align-items: stretch; padding: 2.4vw 6vw 3vw; }
+  h1 { font: 800 2.7em/1.04 var(--sans); margin: .45em 0 .6em; letter-spacing: -.01em; }
+  .join h1 { font-size: 3.6em; }
+  .num { font: 700 8.5em/.92 var(--grot); letter-spacing: -.03em; color: var(--yellow); }
+  .num small { font-size: .45em; letter-spacing: 0; }
+  .cap { font: 700 1.45em/1.25 var(--sans); margin: .35em 0 0; max-width: 20em; }
+  .legend { display: flex; gap: 1.8vw; font: 700 1.05em var(--sans); margin-top: 1.4vw; }
   .take { margin-top: 2.4vw; font-size: 1.2em; }
-  .mapcol { height: calc(100vh - 6vw); display: flex; align-items: center; justify-content: center; }
-  .mapcol svg { height: 100%; width: auto; }
-  .foot { position: absolute; left: 4.5vw; right: 4.5vw; bottom: 1.1vw; font: 700 .62em var(--grot); letter-spacing: .16em; text-transform: uppercase; color: var(--grey); display: flex; align-items: center; gap: .6em; z-index: 2; }
-  .foot .sp { flex: 1; }
-  body.blue .foot { color: rgba(255,255,255,.65); }
-  /* join */
-  .join { position: absolute; inset: 0; display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; padding: 3vw 4.5vw 3.4vw; gap: 3vw; color: #fff; }
-  .join .dk { color: var(--yellow); font-size: .85em; }
-  .join h1 { font: 800 3.7em/1 var(--head); letter-spacing: -.015em; margin: .3em 0 .55em; }
-  .label { background: #fff; color: var(--ink); border: .2vw solid var(--ink); display: grid; grid-template-columns: auto 1fr; width: max-content; max-width: 100%; }
-  .label .qr { width: 30vh; height: 30vh; padding: 1.1vw; border-right: .2vw solid var(--ink); }
-  .label .qr svg { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
-  .label .steps { padding: 1.2vw 1.8vw; display: grid; align-content: center; gap: 1.1vw; font: 700 1.25em/1.2 var(--grot); white-space: nowrap; }
-  .label .steps div { display: flex; align-items: center; gap: .6em; }
-  .label .steps .badge { font-size: .8em; width: 1.6em; height: 1.6em; }
-  .label .strip { grid-column: 1 / -1; border-top: .2vw solid var(--ink); display: flex; align-items: center; gap: 1.4vw; padding: .6vw 1.1vw; font: 500 .72em var(--grot); letter-spacing: .12em; text-transform: uppercase; }
-  .label .strip svg { height: 1.6vw; width: auto; display: block; }
-  .label .strip .sp { flex: 1; }
-  .count { margin-top: 1.8vw; display: inline-flex; }
-  .count span { font: 800 1.7em/1 var(--head); color: var(--yellow); padding: .35em .55em .3em; }
+  .jr { position: relative; height: calc(100vh - 6vw); display: flex; align-items: center; justify-content: center; }
+  .disc { width: min(100%, calc(100vh - 6vw)); aspect-ratio: 1; box-sizing: border-box; background: #fff; border-radius: 50%; box-shadow: 0 1.2vw 3vw rgba(0,0,0,.28); padding: 1.2vh; }
+  .disc svg { width: 100%; height: 100%; display: block; }
+  .pill { position: absolute; right: 1vw; bottom: 1vh; background: var(--yellow); color: var(--ink); font: 800 1.3em var(--sans); padding: .4em 1em .4em .5em; border-radius: 3em; box-shadow: 0 .6vw 1.4vw rgba(0,0,0,.25); display: flex; align-items: center; gap: .4em; white-space: nowrap; }
+  .pill span { font: 700 2em/1 var(--grot); background: var(--ink); color: var(--yellow); border-radius: 2em; padding: .1em .45em; }
+  .jq { display: flex; gap: 2vw; align-items: center; }
+  .qrbig { background: #fff; padding: 1.2vw; border-radius: 1.2vw; width: 34vh; height: 34vh; box-shadow: 0 1vw 2.5vw rgba(0,0,0,.25); flex: none; }
+  .qrbig svg { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+  .jsteps { display: grid; gap: 1.1vw; font: 700 1.3em/1.2 var(--sans); white-space: nowrap; }
+  .jsteps div { display: flex; align-items: center; gap: .7em; }
+  .stage .sticker { margin-top: 2.2vw; font-size: 1.15em; }
+  .foot { position: absolute; right: 2vw; bottom: 1.2vw; font-size: .8em; color: rgba(255,255,255,.7); display: flex; align-items: center; gap: .5em; z-index: 2; }
   /* final vote */
-  .rows { display: grid; grid-template-columns: auto 1fr; gap: 1.3vw 2vw; align-items: center; }
-  .rows .who { display: flex; align-items: center; gap: .7em; font: 700 1.2em var(--grot); white-space: nowrap; }
-  .rows .who .ico { width: 2.4em; height: 2.4em; }
-  .rows .lines { display: grid; gap: .45vw; }
+  .rows { display: grid; grid-template-columns: auto 1fr; gap: 1vw 2.2vw; align-items: center; }
+  .rows .who { display: flex; align-items: center; gap: .7em; font: 800 1.3em var(--sans); white-space: nowrap; }
+  .rows .who i { width: 2.3em; height: 2.3em; border-radius: 50%; background: #fff; color: var(--ink); display: grid; place-items: center; flex: none; }
+  .rows .who .ico { width: 1.7em; height: 1.7em; }
+  .rows .lines { display: grid; gap: .5vw; }
   .rows .l { display: grid; grid-template-columns: 1fr 3.6em; gap: 1vw; align-items: center; }
-  .rows .tr { height: 1.9vw; background: rgba(17,17,17,.06); }
-  .rows .fl { height: 100%; transition: width .9s cubic-bezier(.2, .8, .2, 1); }
-  .rows .l span { font: 700 1em var(--grot); text-align: right; }
-  .muted { color: var(--grey); }
+  .rows .tr { height: 1.7vw; background: rgba(255,255,255,.14); border-radius: 1vw; overflow: hidden; }
+  .rows .fl { height: 100%; border-radius: 1vw; transition: width .9s cubic-bezier(.2, .8, .2, 1); }
+  .rows .l span { font: 700 1.05em var(--grot); text-align: right; }
+  .muted { color: rgba(255,255,255,.6); }
+  .endpill { position: static; display: inline-flex; margin-top: 2vw; box-shadow: none; font-size: 1.15em; }
 </style>
 </head>
 <body>
 <div id="root"></div>
-<div class="prog" id="prog"></div>
-<div class="foot"><span>IKEA, reassembled · Live</span><span class="sp"></span><span class="status-dot" id="dot"></span><span id="foot"></span></div>
+<div class="foot"><span class="status-dot" id="dot"></span><span id="foot"></span></div>
 <script src="lib/mqtt.min.js"></script>
 <script src="lib/qrcode.js"></script>
 <script src="js/common.js"></script>
@@ -81,7 +67,6 @@
   const force = Q.get("force") === "1";         // allow moving backwards
   const demo = parseInt(Q.get("demo") || "0", 10);
   let gState = null, records = {}, timer = null;
-  if (view === "none") document.body.style.background = "transparent";
 
   const phoneURL = (() => {
     const u = new URL("index.html", location.href);
@@ -97,48 +82,35 @@
     got: `<div class="legend">${sw("var(--blue)", "Own car")}${sw("var(--yellow)", "No own car")}</div>`,
     react: `<div class="legend">${sw("var(--green)", "Fine")}${sw("#f28c28", "Meh")}${sw("var(--red)", "Want it now")}</div>`,
   };
-  const bar = (label, text) => `<div class="bar take"><b>${label}</b><span>${text}</span></div>`;
-  function barcode() { // decorative, like the box label on the deck's Step dividers
-    let x = 0, r = "";
-    for (let k = 0; k < 46; k++) { const w = 1 + ((k * 7 + 3) % 3); if (k % 2 === 0) r += `<rect x="${x}" y="0" width="${w}" height="20"/>`; x += w; }
-    return `<svg viewBox="0 0 ${x} 20" fill="#111">${r}</svg>`;
-  }
-  const BG = { join: "blue", s0: "kraft", s1: "", s2: "kraft", s3: "", s4: "kraft", s5: "", end: "kraft" };
+  const sticker = (t) => `<div><span class="sticker take">${t}</span></div>`;
 
   function render() {
     const T = IKL.tally(records);
     const ph = pPhase || (gState && gState.phase) || "join";
-    document.getElementById("foot").textContent = `${T.n} phones${demo ? " · demo data" : ""}`;
-    if (view === "none") { root.innerHTML = ""; return; }
-    document.body.className = BG[ph] || "";
-    const Zd = ZONES[ph];
-    const stepN = Zd ? Zd.n : -1;
-    document.getElementById("prog").innerHTML = ph === "join" ? "" : [0, 1, 2, 3, 4, 5].map((n) => `<i class="${n === stepN ? "on" : ""}"></i>`).join("");
-    const head = (title) => `<div class="dk">${Zd.step}</div><div class="ttl"><span class="badge">${Zd.n}</span><span>${title}</span></div>`;
-    const mapcol = `<div class="mapcol">${roomMap(ph, records, null, { big: true })}</div>`;
-    const panel = (title, big, cap, extra = "") => `<div class="stage"><div>${head(title)}${big}${cap ? `<p class="cap">${cap}</p>` : ""}${extra}</div>${mapcol}</div>`;
-    const homes = sum(T.home);
+    document.getElementById("foot").textContent = `${T.n} phones · ${demo ? "demo data" : CFG.room}`;
+    if (view === "none") { root.innerHTML = ""; document.body.style.background = "transparent"; return; }
+    const Zd = ZONES[ph], homes = sum(T.home);
+    const right = (pill = "") => `<div class="jr"><div class="disc">${roomMap(ph, records, null, { big: true })}</div>${pill}</div>`;
+    const onMap = `<div class="pill"><span>${homes}</span> on the map</div>`;
+    const panel = (title, big, cap, extra = "") => `<div class="stage"><div><span class="tagy">${Zd.step}</span><h1>${title}</h1>${big}${cap ? `<p class="cap">${cap}</p>` : ""}${extra}</div>${right()}</div>`;
 
     if (ph === "join") {
-      root.innerHTML = `<div class="join"><div>
-          <div class="dk">Before we start</div>
+      root.innerHTML = `<div class="stage join"><div><span class="tagy">Before we start</span>
           <h1>Put yourself<br>on the map.</h1>
-          <div class="label"><div class="qr">${qrSVG(phoneURL)}</div>
-            <div class="steps"><div><span class="badge">1</span>Scan</div><div><span class="badge">2</span>Tap where you live</div><div><span class="badge">3</span>Find your dot</div></div>
-            <div class="strip"><span>Art. 000.523.live</span>${barcode()}<span class="sp"></span><span>2 taps · anonymous</span></div></div>
-          <div><div class="bar count"><b>On the map</b><span>${homes}</span></div></div>
-        </div>${mapcol}</div>`;
+          <div class="jq"><div class="qrbig">${qrSVG(phoneURL)}</div>
+            <div class="jsteps"><div><b class="badge">1</b>Scan</div><div><b class="badge">2</b>Tap where you live</div><div><b class="badge">3</b>Find your dot</div></div></div>
+          <div class="sticker">2 taps · anonymous</div></div>${right(onMap)}</div>`;
     } else if (ph === "s0") {
       const g = sum(T.got), noCar = g - (T.got.car || 0);
-      root.innerHTML = panel("How did your last furniture get home?", `<div class="num">${pct(noCar, g)}<small>%</small></div>`,
-        "of you did <b>not</b> use your own car.", LEG.got + bar("Blue box", "It assumes you have a car."));
+      root.innerHTML = panel("How did your last<br>furniture get home?", `<div class="num">${pct(noCar, g)}<small>%</small></div>`,
+        "of you did <b>not</b> use your own car.", LEG.got + sticker("The blue box assumes you have one."));
     } else if (ph === "s1") {
       root.innerHTML = panel("Cities grow.", `<div class="num">${pct(T.home.centre || 0, homes)}<small>%</small></div>`, "of this room lives in a city centre.");
     } else if (ph === "s2") {
       root.innerHTML = panel("A Planning Studio opens in town.", `<div class="num">${T.home.centre || 0}</div>`, "of you could walk there.");
     } else if (ph === "s3") {
       const r = sum(T.react), unhappy = (T.react.meh || 0) + (T.react.angry || 0);
-      root.innerHTML = panel("Not in stock. Delivered later.", `<div class="num">${pct(unhappy, r)}<small>%</small></div>`, "of you are <b>not OK</b> with waiting.", LEG.react);
+      root.innerHTML = panel("Not in stock.<br>Delivered later.", `<div class="num">${pct(unhappy, r)}<small>%</small></div>`, "of you are not OK with waiting.", LEG.react);
     } else if (ph === "s4") {
       root.innerHTML = panel("Will it fit?", "", "", "");
     } else if (ph === "s5") {
@@ -147,15 +119,15 @@
       const tb = sum(T.before), ta = sum(T.after);
       const rows = QUESTIONS.before.opts.map(([v, e, l]) => {
         const b = pct(T.before[v] || 0, tb), a = pct(T.after[v] || 0, ta);
-        return `<div class="who">${ICON(e)}${l}</div><div class="lines">
-          <div class="l"><div class="tr"><div class="fl" style="width:${b}%;background:#c9c9c9"></div></div><span class="muted">${b}%</span></div>
-          <div class="l"><div class="tr"><div class="fl" style="width:${a}%;background:var(--blue)"></div></div><span>${a}%</span></div></div>`;
+        return `<div class="who"><i>${ICON(e)}</i>${l}</div><div class="lines">
+          <div class="l"><div class="tr"><div class="fl" style="width:${b}%;background:rgba(255,255,255,.45)"></div></div><span class="muted">${b}%</span></div>
+          <div class="l"><div class="tr"><div class="fl" style="width:${a}%;background:var(--yellow)"></div></div><span>${a}%</span></div></div>`;
       }).join("");
       const dy = pct(T.after.change || 0, ta) - pct(T.before.change || 0, tb);
-      root.innerHTML = `<div class="stage full">${head("Big stores outside the city: still the right model?")}
-        <div class="legend" style="margin:0 0 1.6vw">${sw("#c9c9c9", "Before we started")}${sw("var(--blue)", "Now")}</div>
+      root.innerHTML = `<div class="stage full"><div><span class="tagy">${Zd.step}</span></div><h1 style="margin:.4em 0 .5em;font-size:2.3em;white-space:nowrap">Big stores outside the city: still the right model?</h1>
+        <div class="legend" style="margin:0 0 2vw">${sw("rgba(255,255,255,.45)", "Before we started")}${sw("var(--yellow)", "Now")}</div>
         <div class="rows">${rows}</div>
-        <div>${ta ? bar("The shift", (dy >= 0 ? "+" : "") + dy + " points for “change it” since the start.") : bar("Now", "Vote on your phone.")}</div></div>`;
+        <div><span class="pill endpill">${ta ? `<span>${(dy >= 0 ? "+" : "") + dy}</span> points for “change it” since the start` : "Vote on your phone."}</span></div></div>`;
     }
   }
   function soon() { clearTimeout(timer); timer = setTimeout(render, 250); }
