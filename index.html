@@ -152,7 +152,7 @@
     }
     window.scrollTo(0, samePhase ? y : 0);
   }
-  function soon() { clearTimeout(timer); timer = setTimeout(() => render(), 300); }
+  function soon() { if (timer) return; timer = setTimeout(() => { timer = null; render(); }, 300); }
 
   $main.addEventListener("click", (e) => {
     const b = e.target.closest(".opt"); if (!b) return;
