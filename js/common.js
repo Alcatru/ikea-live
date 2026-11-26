@@ -13,22 +13,22 @@
     lena: {
       name: "Lena", age: 22, role: "Student", home: "24 m² studio, Bern old town",
       car: false, ok: { Car: false, Time: true, Space: false, Travel: false }, w: 3, urban: true,
-      need: "Lives in the city and doesn't drive",
+      need: "Lives in the city and doesn't drive", tag: "24 m² studio. No car.",
     },
     jonas: {
       name: "Jonas", age: 29, role: "Junior consultant", home: "2-room flat, Bern Länggasse",
       car: false, ok: { Car: false, Time: false, Space: false, Travel: true }, w: 3, urban: true,
-      need: "Has very little time for shopping",
+      need: "Has very little time for shopping", tag: "City flat. No car, no time.",
     },
     amira: {
       name: "Amira", age: 26, role: "Nurse, shift work", home: "Shared flat, Bern Breitenrain",
       car: false, ok: { Car: false, Time: false, Space: false, Travel: false }, w: 2, urban: true,
-      need: "Small space, no car, irregular hours",
+      need: "Small space, no car, irregular hours", tag: "Shared flat. Night shifts. No car.",
     },
     family: {
       name: "Sofia & Marc", age: null, role: "Family, two kids", home: "House with garden near Burgdorf",
       car: true, ok: { Car: true, Time: true, Space: true, Travel: true }, w: 2, urban: false,
-      need: "The classic IKEA customer",
+      need: "The classic IKEA customer", tag: "House, garden, car.",
     },
   };
   const ASSUMPTIONS = ["Car", "Time", "Space", "Travel"];

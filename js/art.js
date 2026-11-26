@@ -176,5 +176,17 @@
   };
   const ricon = (k) => `<svg viewBox="0 0 48 48" width="22" height="22">${RICON[k] || ICON[k] || ""}</svg>`;
 
-  window.ART = { fig, figAt, HOMES, car, icon, tile, sceneS0, force, sceneS2, sceneS3, sceneS4, ricon };
+  /* Closed flat-pack box for the unboxing, viewBox 0 0 300 250 */
+  function box() {
+    return `<svg viewBox="0 0 300 250" class="boxart">
+      <g class="lid"><rect x="22" y="58" width="256" height="34" fill="#c9a575" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/><rect x="136" y="58" width="28" height="34" fill="${BLUE}"/></g>
+      <rect x="36" y="92" width="228" height="140" fill="${KRAFT}" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/>
+      <rect x="136" y="92" width="28" height="64" fill="${BLUE}"/>
+      ${L([[56, 120], [116, 120]], 5)}${L([[186, 206], [244, 206]], 5)}
+      ${figAt(60, 150, 70, "carry")}
+      <g class="tapme"><circle cx="232" cy="150" r="22" fill="${YEL}" stroke="${INK}" stroke-width="5"/><path d="M226 140 l14 10 l-14 10z" fill="${INK}"/></g>
+    </svg>`;
+  }
+
+  window.ART = { box, fig, figAt, HOMES, car, icon, tile, sceneS0, force, sceneS2, sceneS3, sceneS4, ricon, box };
 })();

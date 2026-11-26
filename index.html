@@ -123,6 +123,23 @@
   .blink { animation: sweat 1.2s ease-in-out infinite; }
   .bounce { animation: pulse2 1.4s ease-in-out infinite; }
   .mapwrap svg { max-height: 210px; }
+  .unbox { text-align: center; padding-top: 24px; }
+  .ub-t { font: 800 26px/1.15 var(--sans); margin: 6px 0 18px; }
+  .boxbtn { border: 0; background: none; padding: 0; width: 100%; cursor: pointer; }
+  .boxart { width: 86%; max-width: 330px; overflow: visible; animation: wiggle 2.4s ease-in-out infinite; }
+  @keyframes wiggle { 0%, 70%, 100% { transform: rotate(0); } 75% { transform: rotate(-2.5deg); } 80% { transform: rotate(2.5deg); } 85% { transform: rotate(-1.5deg); } 90% { transform: rotate(0); } }
+  .boxart .lid { transform-box: fill-box; transform-origin: 0% 100%; transition: transform .7s cubic-bezier(.3, 1.4, .5, 1), opacity .7s; }
+  .opening .boxart { animation: none; }
+  .opening .boxart .lid { transform: translate(-30px, -60px) rotate(-38deg); opacity: 0; }
+  .opening .boxart { animation: shake .3s ease-in-out 2; }
+  @keyframes shake { 50% { transform: translateY(6px) scale(1.02, .98); } }
+  .tapme { animation: pulse2 1.2s ease-in-out infinite; }
+  .reveal { text-align: center; padding-top: 6px; }
+  .reveal .homeart { background: #f4f8fc; border: 2px solid var(--ink); border-radius: 12px; padding: 16px 16px 6px; animation: popout .8s cubic-bezier(.2, 1.5, .4, 1) both; transform-origin: 50% 100%; }
+  .reveal .homeart svg { width: 100%; display: block; }
+  @keyframes popout { from { transform: translateY(80px) scale(.3); opacity: 0; } }
+  .ub-name { font: 800 28px/1.1 var(--sans); margin: 16px 0 4px; animation: rise .5s ease-out both .45s; }
+  .ub-tag { font: 700 17px var(--sans); color: var(--blue); margin: 0 0 4px; animation: rise .5s ease-out both .6s; }
   footer { padding: 14px 16px 22px; font-size: 11px; color: var(--grey); text-align: center; line-height: 1.5; }
   .btn { display: block; width: 100%; margin-top: 14px; padding: 15px; border: 0; border-radius: 30px; background: var(--blue); color: #fff; font: 700 16px var(--sans); cursor: pointer; }
 </style>
@@ -235,12 +252,18 @@
     shown = key;
 
     if (phase === "join" || (!rec.a.before && (phase === "s0") && !rec.skipBefore)) {
-      $main.innerHTML = `<p class="kicker" style="margin:0 0 10px">Hej! Today you are…</p>
-        <div class="card"><div class="top"><b>Customer card</b><span style="font:700 12px var(--grot)">No. ${id.slice(0, 6).toUpperCase()}</span></div>
+      if (!rec.opened) {
+        $main.innerHTML = `<div class="unbox"><p class="kicker">Hej!</p><h2 class="ub-t">Your IKEA box has arrived.</h2>
+          <button class="boxbtn" id="openbox" aria-label="Open the box">${ART.box()}</button>
+          <p class="one muted">Tap to open it</p></div>`;
+      } else {
+        $main.innerHTML = `<div class="reveal">
           <div class="homeart"><svg viewBox="0 0 320 200">${ART.HOMES[pk]()}</svg></div>
-          <div class="who"><h2>${P.name}${P.age ? ", " + P.age : ""}</h2><p>${P.role} · ${P.home}</p></div></div>
-        <div class="panel">${question("before")}
-        ${rec.a.before ? '<div class="note">Thanks! Keep your phone close.</div>' : ""}</div>`;
+          <h2 class="ub-name">You're ${P.name}${P.age ? ", " + P.age : ""}.</h2>
+          <p class="ub-tag">${P.tag}</p></div>
+        <div class="panel" style="animation-delay:.9s">${question("before")}
+        ${rec.a.before ? '<p class="one muted">Thanks! Keep your phone close.</p>' : ""}</div>`;
+      }
     } else {
       const Zd = ZONES[phase];
       $main.innerHTML = `<div class="mini"><div class="avatar">${AV[pk]}</div><div><b>${P.name}</b><small>${P.home}</small></div>${chips(P)}</div>
@@ -252,6 +275,13 @@
   }
 
   $main.addEventListener("click", (e) => {
+    if (e.target.closest("#openbox")) {
+      const b = document.getElementById("openbox"); if (b.classList.contains("opening")) return;
+      b.classList.add("opening");
+      if (navigator.vibrate) try { navigator.vibrate([20, 40, 20]); } catch (x) {}
+      setTimeout(() => { rec.opened = true; save(); render(true); }, 900);
+      return;
+    }
     const b = e.target.closest(".opt"); if (!b) return;
     const q = b.parentElement.dataset.q;
     rec.a[q] = b.dataset.v; save();
