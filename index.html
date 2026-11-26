@@ -76,6 +76,37 @@
   .receipt .hd { text-align: center; font-weight: 700; letter-spacing: .12em; }
   .receipt .tot { font-weight: 700; font-size: 15px; }
   .receipt .bar { height: 26px; margin-top: 10px; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 5px, transparent 5px 8px); }
+  .card .homeart { background: #f4f8fc; border-bottom: 1.5px solid var(--ink); padding: 14px 18px 4px; }
+  .card .homeart svg { width: 100%; display: block; }
+  .card .who { padding: 12px 14px 14px; } .card .who p { font-size: 13.5px; }
+  .opts:has(.tile) { grid-template-columns: repeat(3, 1fr); }
+  .opt.tile { flex-direction: column; justify-content: flex-start; gap: 6px; padding: 10px 6px 12px; text-align: center; font-size: 13.5px; line-height: 1.2; }
+  .tileart { width: 100%; height: auto; display: block; }
+  .chip i { color: var(--ink); }
+  .chip.ko i { background: #eee; color: var(--grey); position: relative; }
+  .chip.ko i::after { content: ""; position: absolute; left: 3px; right: 3px; top: 50%; height: 2.5px; background: var(--red); transform: rotate(-40deg); border-radius: 2px; }
+  .chip i { width: 30px !important; height: 30px !important; }
+  .mini .chip i { width: 24px !important; height: 24px !important; }
+  .mini .chip i svg { width: 16px; height: 16px; }
+  .mini .chips { flex-wrap: nowrap; }
+  .mini > div:nth-child(2) { min-width: 0; } .mini small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .verdict { margin-top: 14px; border: 2px solid var(--ink); border-radius: 10px; overflow: hidden; animation: pop .5s ease-out both; }
+  .verdict p { margin: 0; padding: 12px 14px 4px; font-size: 17px; }
+  .verdict .big-chips { padding: 6px 14px 14px; }
+  .verdict.bad p b { color: var(--red); } .verdict.good p b { color: var(--green); }
+  .scene { width: 100%; display: block; }
+  .legs-walk { transform-box: fill-box; transform-origin: 50% 0; animation: legs .45s ease-in-out infinite alternate; }
+  @keyframes legs { from { transform: skewX(-8deg); } to { transform: skewX(8deg); } }
+  .trudge { animation: trudge 5s linear infinite; }
+  @keyframes trudge { from { transform: translateX(-30px); } to { transform: translateX(60px); } }
+  .sweat { animation: sweat 1s ease-in infinite; }
+  @keyframes sweat { 50% { opacity: .2; } }
+  .drive-in { animation: drive 1.3s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes drive { from { transform: translateX(-200px); } }
+  .pop { animation: pop .5s ease-out both; }
+  .spin { animation: spin 2s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
+  .squeeze { animation: squeeze 1.2s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
+  @keyframes squeeze { to { transform: scaleX(.92); } }
   footer { padding: 14px 16px 22px; font-size: 11px; color: var(--grey); text-align: center; line-height: 1.5; }
   .btn { display: block; width: 100%; margin-top: 14px; padding: 15px; border: 0; border-radius: 30px; background: var(--blue); color: #fff; font: 700 16px var(--sans); cursor: pointer; }
 </style>
@@ -93,6 +124,7 @@
 <script src="lib/mqtt.min.js"></script>
 <script src="js/common.js"></script>
 <script src="js/map.js"></script>
+<script src="js/art.js"></script>
 <script>
 (function () {
   const { PROFILES, ASSUMPTIONS, QUESTIONS, ZONES, PHASES, store, uid } = IKL;
@@ -107,7 +139,7 @@
   };
 
   function chips(P) {
-    return '<div class="chips">' + ASSUMPTIONS.map((a) => `<span class="chip ${P.ok[a] ? "ok" : "ko"}"><i>${P.ok[a] ? "✓" : "✗"}</i><span>${a}</span></span>`).join("") + "</div>";
+    return '<div class="chips">' + ASSUMPTIONS.map((a) => `<span class="chip ${P.ok[a] ? "ok" : "ko"}" title="${a}"><i>${ART.icon(a, 22)}</i><span>${a}</span></span>`).join("") + "</div>";
   }
   const score = (P) => ASSUMPTIONS.filter((a) => P.ok[a]).length;
 
@@ -125,7 +157,7 @@
   function question(key) {
     const Qd = QUESTIONS[key], cur = rec.a[key];
     return `<div class="q">${Qd.q}</div><div class="opts ${cur ? "done" : ""}" data-q="${key}">` +
-      Qd.opts.map(([v, e, l]) => `<button class="opt ${cur === v ? "sel" : ""}" data-v="${v}"><span class="e">${e}</span>${l}</button>`).join("") + "</div>";
+      Qd.opts.map(([v, e, l]) => `<button class="opt tile ${cur === v ? "sel" : ""}" data-v="${v}">${ART.tile(v)}<span>${l}</span></button>`).join("") + "</div>";
   }
 
   function label(key, v) { const o = QUESTIONS[key].opts.find((x) => x[0] === v); return o ? o[2] : "–"; }
@@ -136,12 +168,11 @@
     switch (ph) {
       case "s0": {
         let fb = "";
-        if (a.travel) {
-          if (P.car) fb = (a.travel !== "car" ? "You have a car, so why not use it? " : "") + "Easy: drive, park, load the flat pack, home by dinner. <b>You are exactly the customer the blue box was built for.</b>";
-          else fb = (a.travel === "car" ? "Nice try, you don't own a car. 🙃 " : "") +
-            `So it's train, bus, then a flat pack carried home by hand. <b>The blue box assumes a car, time, space and the will to travel.</b> You tick ${score(P)} of 4.`;
-        }
-        return `<p class="lead">The classic IKEA: a big blue box outside the city, with a huge car park.</p>${question("travel")}${fb ? `<div class="note">${fb}</div>` : ""}`;
+        if (a.travel) fb = `<div class="verdict ${P.car ? "good" : "bad"}">
+            <div class="vscene">${ART.sceneS0(P, a.travel)}</div>
+            <p>${P.car ? (a.travel === "car" ? "" : "You have a car. ") + "<b>Easy. The blue box was built for you.</b>" : (a.travel === "car" ? "You don't own a car. " : "") + "<b>Train, bus, then carry it home.</b>"}</p>
+            <div class="big-chips">${chips(P)}</div></div>`;
+        return `${question("travel")}${fb}`;
       }
       case "s1": {
         const T = [["Urbanisation, smaller homes, fewer cars", urban], ["The customer journey moves online", pk !== "family"], ["Online specialists grow faster", false], ["Growth through new big stores slows", !urban]];
@@ -206,10 +237,10 @@
     if (phase === "join" || (!rec.a.before && (phase === "s0") && !rec.skipBefore)) {
       $main.innerHTML = `<p class="kicker" style="margin:0 0 10px">Hej! Today you are…</p>
         <div class="card"><div class="top"><b>Customer card</b><span style="font:700 12px var(--grot)">No. ${id.slice(0, 6).toUpperCase()}</span></div>
-          <div class="body"><div class="avatar">${AV[pk]}</div><div class="who"><h2>${P.name}${P.age ? ", " + P.age : ""}</h2><p>${P.role}</p><p>${P.home}</p></div></div>
-          </div>
+          <div class="homeart"><svg viewBox="0 0 320 200">${ART.HOMES[pk]()}</svg></div>
+          <div class="who"><h2>${P.name}${P.age ? ", " + P.age : ""}</h2><p>${P.role} · ${P.home}</p></div></div>
         <div class="panel">${question("before")}
-        ${rec.a.before ? '<div class="note">Thanks! Keep your phone close: the store opens with Step 0.</div>' : ""}</div>`;
+        ${rec.a.before ? '<div class="note">Thanks! Keep your phone close.</div>' : ""}</div>`;
     } else {
       const Zd = ZONES[phase];
       $main.innerHTML = `<div class="mini"><div class="avatar">${AV[pk]}</div><div><b>${P.name}</b><small>${P.home}</small></div>${chips(P)}</div>
