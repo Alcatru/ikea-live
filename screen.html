@@ -153,14 +153,27 @@
     return;
   }
 
+  /* Drive the phones when this slide is actually on screen. PowerPoint can keep an add-in alive between edit view and
+     the slide show (or preload it), so a one-shot "drive on load" is not enough: we also drive each time the frame becomes
+     visible again. Forward only (force=1 allows going back, used on the join slide). */
   let decided = false;
   function maybeDrive() {
-    if (decided || !drive || !pPhase) return; decided = true;
+    if (decided || !drive || !pPhase || !net || !net.connected) return;
+    if (document.visibilityState === "hidden") return;
+    decided = true;
     const cur = gState ? PHASES.indexOf(gState.phase) : -1, want = PHASES.indexOf(pPhase);
     if (!gState) net.publishState({ run: IKL.uid(), phase: pPhase, t: Date.now() });
-    else if (want > cur || force) net.publishState({ run: gState.run, phase: pPhase, t: Date.now() });
+    else if (want > cur || (force && want !== cur)) net.publishState({ run: gState.run, phase: pPhase, t: Date.now() });
   }
-  const net = IKL.connect({
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") { decided = false; setTimeout(maybeDrive, 300); } });
+  window.addEventListener("focus", () => { decided = false; setTimeout(maybeDrive, 300); });
+  let lastFrame = performance.now();
+  (function tick(now) { // rAF stops while the frame is not painted: a long gap = the slide was off screen and is back
+    if (now - lastFrame > 1500) { decided = false; setTimeout(maybeDrive, 300); }
+    lastFrame = now; requestAnimationFrame(tick);
+  })(performance.now());
+  var net = null;
+  net = IKL.connect({
     onStatus(on) { if (on && !everOn) { everOn = true; if (offline && Q.get("offline") !== "1") { offline = false; } } document.getElementById("dot").classList.toggle("on", on); if (on) setTimeout(maybeDrive, 1200); },
     onState(st) { if (!gState || st.run !== gState.run) records = {}; gState = st; maybeDrive(); soon(); },
     onRecord(id, rec) { if (rec) records[id] = rec; else delete records[id]; soon(); },
