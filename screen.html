@@ -33,7 +33,7 @@
   .jsteps { display: grid; gap: 1.1vw; font: 700 1.3em/1.2 var(--sans); white-space: nowrap; }
   .jsteps div { display: flex; align-items: center; gap: .7em; }
   .stage .sticker { margin-top: 2.2vw; font-size: 1.15em; }
-  .foot { position: absolute; right: 2vw; bottom: 1.2vw; font-size: .8em; color: rgba(255,255,255,.7); display: flex; align-items: center; gap: .5em; z-index: 2; }
+  .foot { position: absolute; right: 2vw; bottom: 1.2vw; font-size: .95em; color: rgba(255,255,255,.85); display: flex; align-items: center; gap: .5em; z-index: 2; }
   /* final vote */
   .rows { display: grid; grid-template-columns: auto 1fr; gap: 1vw 2.2vw; align-items: center; }
   .rows .who { display: flex; align-items: center; gap: .7em; font: 800 1.3em var(--sans); white-space: nowrap; }
@@ -47,6 +47,10 @@
   .muted { color: rgba(255,255,255,.6); }
   .hands { display: flex; align-items: center; gap: .7em; margin-top: 1.2vw; }
   .hands .ico { width: 2.6em; height: 2.6em; color: var(--yellow); flex: none; }
+  .vpill { position: absolute; right: 2vw; bottom: 2.4vw; background: #fff; color: var(--ink); font: 700 1em var(--sans); padding: .35em .9em; border-radius: 3em; display: inline-flex; align-items: center; gap: .45em; white-space: nowrap; box-shadow: 0 .4vw 1vw rgba(0,0,0,.18); }
+  .vpill b { font: 700 1.25em/1 var(--grot); }
+  .vpill i { width: .55em; height: .55em; border-radius: 50%; background: var(--green); display: inline-block; }
+  .stage.full .vpill { position: static; margin-left: .8em; vertical-align: middle; }
   .endpill { position: static; display: inline-flex; margin-top: 2vw; box-shadow: none; font-size: 1.15em; }
 </style>
 </head>
@@ -92,14 +96,15 @@
   function render() {
     const T = IKL.tally(records);
     const ph = pPhase || (gState && gState.phase) || "join";
-    document.getElementById("foot").textContent = `${T.n} phones · ${demo ? "demo data" : CFG.room}`;
+    document.getElementById("foot").textContent = `${T.n} phones connected · ${demo ? "demo data" : CFG.room}`;
     if (view === "none") { root.innerHTML = ""; document.body.style.background = "transparent"; return; }
     const Zd = ZONES[ph], homes = sum(T.home);
     if (offline) records = {};
     const hands = (t) => `<p class="cap hands">${ICON("hand")}<span>${t}</span></p>`;
     const right = (pill = "") => `<div class="jr"><div class="disc">${roomMap(ph, records, null, { big: true })}</div>${pill}</div>`;
     const onMap = `<div class="pill"><span>${homes}</span> on the map</div>`;
-    const panel = (title, big, cap, extra = "") => `<div class="stage"><div><span class="tagy">${Zd.step}</span><h1>${title}</h1>${big}${cap ? `<p class="cap">${cap}</p>` : ""}${extra}</div>${right()}</div>`;
+    const voted = (k) => `<div class="vpill"><i></i><b>${k}</b> of ${T.n} have voted</div>`;
+    const panel = (title, big, cap, extra = "", pill = "") => `<div class="stage"><div><span class="tagy">${Zd.step}</span><h1>${title}</h1>${big}${cap ? `<p class="cap">${cap}</p>` : ""}${extra}</div>${right(pill)}</div>`;
 
     if (ph === "join") {
       root.innerHTML = `<div class="stage join"><div><span class="tagy">Before we start</span>
@@ -116,14 +121,14 @@
     } else if (ph === "s0") {
       const g = sum(T.got), noCar = g - (T.got.car || 0);
       root.innerHTML = panel("How did your last<br>furniture get home?", `<div class="num">${pct(noCar, g)}<small>%</small></div>`,
-        "of you did <b>not</b> use your own car.", LEG.got + sticker("The blue box assumes you have one."));
+        "of you did <b>not</b> use your own car.", LEG.got + sticker("The blue box assumes you have one."), voted(g));
     } else if (ph === "s1") {
       root.innerHTML = panel("Cities grow.", `<div class="num">${pct(T.home.centre || 0, homes)}<small>%</small></div>`, "of this room lives in a city centre.");
     } else if (ph === "s2") {
       root.innerHTML = panel("A Planning Studio opens in town.", `<div class="num">${T.home.centre || 0}</div>`, "of you could walk there.");
     } else if (ph === "s3") {
       const r = sum(T.react), unhappy = (T.react.meh || 0) + (T.react.angry || 0);
-      root.innerHTML = panel("Not in stock.<br>Delivered later.", `<div class="num">${pct(unhappy, r)}<small>%</small></div>`, "of you are not OK with waiting.", LEG.react);
+      root.innerHTML = panel("Not in stock.<br>Delivered later.", `<div class="num">${pct(unhappy, r)}<small>%</small></div>`, "of you are not OK with waiting.", LEG.react, voted(r));
     } else if (ph === "s4") {
       root.innerHTML = panel("Will it fit?", "", "", "");
     } else if (ph === "s5") {
@@ -140,7 +145,7 @@
       root.innerHTML = `<div class="stage full"><div><span class="tagy">${Zd.step}</span></div><h1 style="margin:.4em 0 .5em;font-size:2.3em;white-space:nowrap">Big stores outside the city: still the right model?</h1>
         <div class="legend" style="margin:0 0 2vw">${sw("rgba(255,255,255,.45)", "Before we started")}${sw("var(--yellow)", "Now")}</div>
         <div class="rows">${rows}</div>
-        <div><span class="pill endpill">${ta ? `<span>${(dy >= 0 ? "+" : "") + dy}</span> points for “change it” since the start` : "Vote on your phone."}</span></div></div>`;
+        <div><span class="pill endpill">${ta ? `<span>${(dy >= 0 ? "+" : "") + dy}</span> points for “change it” since the start` : "Vote on your phone."}</span>${voted(ta).replace("div","span").replace("</div>","</span>")}</div></div>`;
     }
   }
   setTimeout(() => { if (!everOn && !demo && !offline) { offline = true; render(); } }, 7000);
